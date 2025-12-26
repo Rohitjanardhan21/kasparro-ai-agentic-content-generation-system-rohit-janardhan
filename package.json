@@ -1,0 +1,14 @@
+{
+  "name": "kasparro-ai-agentic-content-generation-system",
+  "version": "1.0.0",
+  "description": "Multi-agent content generation system for product data",
+  "main": "src/index.js",
+  "scripts": {
+    "generate": "node src/index.js",
+    "test": "node src/test.js"
+  },
+  "type": "module",
+  "keywords": ["ai", "agents", "content-generation", "automation"],
+  "author": "Kasparro Challenge",
+  "license": "MIT"
+}

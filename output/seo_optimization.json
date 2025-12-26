@@ -1,0 +1,299 @@
+{
+  "meta_data": {
+    "title": "GlowBoost Vitamin C Serum - 10% Vitamin C for Oily, Combination Skin | ₹699",
+    "description": "GlowBoost Vitamin C Serum with Vitamin C, Hyaluronic Acid. Brightening, Fades dark spots. Perfect for oily, combination skin. ₹699",
+    "keywords": [
+      "glowboost",
+      "vitamin",
+      "serum",
+      "10%",
+      "oily",
+      "combination",
+      "hyaluronic",
+      "acid",
+      "brightening",
+      "fades",
+      "dark",
+      "spots"
+    ],
+    "og_title": "GlowBoost Vitamin C Serum - Premium Skincare Solution",
+    "og_description": "Transform your skin with GlowBoost Vitamin C Serum. Brightening, Fades dark spots for oily, combination skin types.",
+    "twitter_title": "GlowBoost Vitamin C Serum - 10% Vitamin C",
+    "twitter_description": "Brightening, Fades dark spots • Vitamin C, Hyaluronic Acid • ₹699"
+  },
+  "keywords": {
+    "primary_keywords": [
+      "glowboost",
+      "vitamin",
+      "serum",
+      "10%",
+      "oily",
+      "combination",
+      "hyaluronic",
+      "acid",
+      "brightening",
+      "fades",
+      "dark",
+      "spots"
+    ],
+    "long_tail_keywords": [
+      "are there any side effects?",
+      "is this suitable for sensitive skin?",
+      "can i use this with other skincare products?",
+      "how do i use this product?",
+      "how long before i see results?",
+      "when should i apply this serum?",
+      "what is glowboost vitamin c serum?",
+      "what is the price?",
+      "is this good value for money?",
+      "where can i buy this product?"
+    ],
+    "semantic_keywords": [
+      "ascorbic acid",
+      "antioxidant serum",
+      "brightening serum",
+      "anti-aging",
+      "hydrating serum",
+      "moisture retention",
+      "plumping serum",
+      "oil control",
+      "non-comedogenic",
+      "pore minimizing",
+      "balanced skincare",
+      "multi-zone treatment",
+      "radiance",
+      "glow",
+      "luminous skin",
+      "even skin tone",
+      "hyperpigmentation",
+      "age spots",
+      "melasma",
+      "discoloration"
+    ],
+    "competitor_keywords": [
+      "vitamin c serum comparison",
+      "best vitamin c serum",
+      "vitamin c serum reviews",
+      "affordable vitamin c serum",
+      "vitamin c serum vs retinol",
+      "morning skincare routine",
+      "anti-aging serum",
+      "brightening skincare products"
+    ],
+    "keyword_density": {
+      "glowboost": 3.23,
+      "vitamin": 9.68,
+      "serum": 3.23,
+      "10%": 3.23,
+      "oily": 3.23,
+      "combination": 3.23,
+      "hyaluronic": 3.23,
+      "acid": 3.23,
+      "brightening": 3.23,
+      "fades": 3.23,
+      "dark": 3.23,
+      "spots": 3.23
+    },
+    "search_volume_estimates": {
+      "glowboost": "Low (100-1K)",
+      "vitamin": "Low (100-1K)",
+      "serum": "Medium (1K-10K)",
+      "10%": "Low (100-1K)",
+      "oily": "Low (100-1K)",
+      "combination": "Low (100-1K)",
+      "hyaluronic": "Low (100-1K)",
+      "acid": "Low (100-1K)",
+      "brightening": "Low (100-1K)",
+      "fades": "Low (100-1K)",
+      "dark": "Low (100-1K)",
+      "spots": "Low (100-1K)"
+    }
+  },
+  "content_structure": {
+    "h1_suggestions": [
+      "GlowBoost Vitamin C Serum - 10% Vitamin C Serum",
+      "Best 10% Vitamin C Serum for Oily, Combination Skin",
+      "GlowBoost Vitamin C Serum Review: Brightening, Fades dark spots"
+    ],
+    "h2_suggestions": [
+      "Key Benefits and Results",
+      "How to Use This Serum",
+      "Ingredients and Formula",
+      "Frequently Asked Questions",
+      "Price and Where to Buy"
+    ],
+    "content_hierarchy": {
+      "page_structure": [
+        {
+          "level": "H1",
+          "content": "GlowBoost Vitamin C Serum - Complete Guide"
+        },
+        {
+          "level": "H2",
+          "content": "Product Overview"
+        },
+        {
+          "level": "H3",
+          "content": "Key Ingredients"
+        },
+        {
+          "level": "H3",
+          "content": "Benefits"
+        },
+        {
+          "level": "H2",
+          "content": "How to Use"
+        },
+        {
+          "level": "H2",
+          "content": "Frequently Asked Questions"
+        },
+        {
+          "level": "H3",
+          "content": "Safety Information"
+        },
+        {
+          "level": "H3",
+          "content": "Purchase Information"
+        },
+        {
+          "level": "H2",
+          "content": "Product Comparison"
+        }
+      ],
+      "content_sections": {
+        "safety": [
+          "Are there any side effects?",
+          "Is this suitable for sensitive skin?",
+          "Can I use this with other skincare products?"
+        ],
+        "usage": [
+          "How do I use this product?",
+          "How long before I see results?",
+          "When should I apply this serum?"
+        ],
+        "informational": [
+          "What is GlowBoost Vitamin C Serum?",
+          "What are the key ingredients?",
+          "What benefits can I expect?"
+        ],
+        "purchase": [
+          "What is the price?",
+          "Is this good value for money?",
+          "Where can I buy this product?",
+          "Are there any discounts available?",
+          "What is the shelf life?"
+        ],
+        "comparison": [
+          "How does this compare to other Vitamin C serums?",
+          "How does the price compare to similar products?",
+          "Why choose this over other brands?",
+          "Is this more effective than lower concentration serums?"
+        ]
+      }
+    },
+    "internal_linking_opportunities": [
+      {
+        "anchor": "Vitamin C benefits",
+        "target": "/vitamin-c-skincare-benefits"
+      },
+      {
+        "anchor": "Hyaluronic Acid guide",
+        "target": "/hyaluronic-acid-complete-guide"
+      },
+      {
+        "anchor": "Oily skin care routine",
+        "target": "/oily-skin-care-routine"
+      },
+      {
+        "anchor": "Morning skincare steps",
+        "target": "/morning-skincare-routine"
+      },
+      {
+        "anchor": "Skincare ingredient compatibility",
+        "target": "/skincare-ingredients-compatibility"
+      }
+    ],
+    "content_length_recommendations": {
+      "faq_page": "900-1440 words",
+      "product_page": "800-1200 words",
+      "comparison_page": "600-900 words",
+      "total_content": "2570 words approximately"
+    }
+  },
+  "schema_markup": {
+    "product_schema": {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "GlowBoost Vitamin C Serum",
+      "description": "Brightening, Fades dark spots serum with Vitamin C, Hyaluronic Acid",
+      "brand": {
+        "@type": "Brand",
+        "name": "GlowBoost"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "699",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.5",
+        "reviewCount": "127"
+      }
+    },
+    "faq_schema": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is GlowBoost Vitamin C Serum?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GlowBoost Vitamin C Serum is a 10% Vitamin C serum designed for oily, combination skin types."
+          }
+        }
+      ]
+    },
+    "howto_schema": {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to use GlowBoost Vitamin C Serum",
+      "description": "Apply 2–3 drops in the morning before sunscreen",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "text": "Apply 2–3 drops in the morning before sunscreen"
+        }
+      ]
+    }
+  },
+  "url_suggestions": {
+    "product_page": "/glowboost-vitamin-c-serum",
+    "faq_page": "/glowboost-vitamin-c-serum/faq",
+    "comparison_page": "/glowboost-vitamin-c-serum/vs-competitors",
+    "review_page": "/glowboost-vitamin-c-serum/review",
+    "how_to_use": "/glowboost-vitamin-c-serum/how-to-use",
+    "ingredients": "/glowboost-vitamin-c-serum/ingredients"
+  },
+  "title_variations": [
+    "GlowBoost Vitamin C Serum - 10% Vitamin C for Oily, Combination Skin",
+    "Best 10% Vitamin C Serum - GlowBoost Vitamin C Serum Review",
+    "GlowBoost Vitamin C Serum: Brightening, Fades dark spots Serum for Oily, Combination Skin",
+    "10% Vitamin C Serum with Vitamin C, Hyaluronic Acid - GlowBoost Vitamin C Serum",
+    "GlowBoost Vitamin C Serum - Premium Skincare for Oily, Combination Skin Types"
+  ],
+  "description_variations": [
+    "GlowBoost Vitamin C Serum delivers brightening, fades dark spots with Vitamin C, Hyaluronic Acid. Perfect for oily, combination skin. ₹699",
+    "Transform your skin with GlowBoost Vitamin C Serum. This 10% Vitamin C serum provides brightening, fades dark spots for oily, combination skin types.",
+    "Discover GlowBoost Vitamin C Serum - a powerful 10% Vitamin C serum featuring Vitamin C, Hyaluronic Acid. Ideal for oily, combination skin. Shop now for ₹699",
+    "Brightening, Fades dark spots made easy with GlowBoost Vitamin C Serum. Contains Vitamin C, Hyaluronic Acid in a 10% Vitamin C formula designed for oily, combination skin."
+  ],
+  "seo_score": {
+    "total_score": 100,
+    "grade": "A+",
+    "recommendations": []
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "product_info": {
+    "title": "GlowBoost Vitamin C Serum",
+    "concentration": "10% Vitamin C",
+    "description": "Premium skincare solution for {{product.skinType}} skin"
+  },
+  "concentration": "10% Vitamin C",
+  "skin_types": [
+    "Oily",
+    "Combination"
+  ],
+  "key_ingredients": [
+    "Vitamin C",
+    "Hyaluronic Acid"
+  ],
+  "product_category": "skincare_serum",
+  "active_ingredient": "Vitamin C",
+  "formulation_type": "serum",
+  "texture": "lightweight_liquid",
+  "absorption_rate": "fast",
+  "shelf_life": "12-24 months",
+  "storage_requirements": "cool, dry place away from direct sunlight",
+  "benefits": [
+    "Brightening",
+    "Fades dark spots"
+  ],
+  "primary_benefit": "Brightening",
+  "benefit_count": 2,
+  "formatted_benefits": [
+    {
+      "name": "Brightening",
+      "description": "Experience brightening with regular use",
+      "timeline": "2-4 weeks",
+      "intensity": "immediate"
+    },
+    {
+      "name": "Fades dark spots",
+      "description": "Experience fades dark spots with regular use",
+      "timeline": "4-6 weeks",
+      "intensity": "gradual"
+    }
+  ],
+  "usage_instructions": "Apply 2–3 drops in the morning before sunscreen",
+  "application_frequency": "daily_morning",
+  "application_time": "morning",
+  "steps": [
+    {
+      "step_number": 1,
+      "instruction": "Apply 2–3 drops in the morning before sunscreen",
+      "duration": "30 seconds",
+      "importance": "critical"
+    }
+  ],
+  "precautions": [
+    "Patch test before first use",
+    "Discontinue if irritation occurs",
+    "Avoid contact with eyes"
+  ],
+  "side_effects": "Mild tingling for sensitive skin",
+  "safety_level": "low_risk",
+  "risk_factors": [
+    "sensitive_skin_reaction"
+  ],
+  "suitable_for_sensitive_skin": false,
+  "patch_test_recommendation": true,
+  "price": "₹699",
+  "numeric_price": 699,
+  "currency": "INR",
+  "price_category": "mid_range",
+  "value_proposition": "Effective skincare solution at ₹699",
+  "market_positioning": "competitive",
+  "cost_effectiveness": "high",
+  "metadata": {
+    "page_type": "product_description"
+  }
+}

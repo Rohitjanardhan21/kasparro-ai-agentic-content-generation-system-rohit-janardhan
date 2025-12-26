@@ -1,0 +1,77 @@
+{
+  "content_metrics": {
+    "total_questions_generated": 18,
+    "faq_questions_used": 5,
+    "content_utilization_rate": 28,
+    "average_answer_length": 74,
+    "content_density_score": 52,
+    "comparison_completeness": 100
+  },
+  "question_analysis": {
+    "category_distribution": {
+      "safety": 3,
+      "usage": 3,
+      "informational": 3,
+      "purchase": 5,
+      "comparison": 4
+    },
+    "most_common_category": "purchase",
+    "average_complexity_score": 8,
+    "question_types": {
+      "what_questions": 5,
+      "how_questions": 4,
+      "why_questions": 1,
+      "can_questions": 1,
+      "is_questions": 3
+    }
+  },
+  "readability_scores": {
+    "faq_readability": 42,
+    "product_readability": 0,
+    "average_sentence_length": 12,
+    "vocabulary_complexity": {
+      "vocabulary_diversity": 62,
+      "complex_word_ratio": 48
+    }
+  },
+  "engagement_predictions": {
+    "predicted_engagement_level": "high",
+    "engagement_score": 100,
+    "key_strengths": [
+      "Comprehensive question coverage",
+      "Well-balanced content categories",
+      "Strong practical focus",
+      "Covers diverse user intents"
+    ],
+    "improvement_areas": []
+  },
+  "content_gaps": {
+    "missing_categories": [
+      "technical"
+    ],
+    "underrepresented_topics": [
+      "storage"
+    ],
+    "suggested_additions": [
+      "What is the pH level of this product?",
+      "What is the molecular weight of the active ingredients?"
+    ]
+  },
+  "optimization_suggestions": [
+    {
+      "type": "content_expansion",
+      "priority": "medium",
+      "suggestion": "Consider generating more questions to improve content coverage"
+    },
+    {
+      "type": "faq_enhancement",
+      "priority": "high",
+      "suggestion": "Increase FAQ questions to improve user experience"
+    },
+    {
+      "type": "benefit_enhancement",
+      "priority": "high",
+      "suggestion": "Expand benefit descriptions for better product positioning"
+    }
+  ]
+}

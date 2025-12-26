@@ -1,0 +1,67 @@
+{
+  "page_info": {
+    "title": "{{product.name}} - Frequently Asked Questions",
+    "type": "faq",
+    "product_name": "GlowBoost Vitamin C Serum"
+  },
+  "faqs": [
+    {
+      "question": "Are there any side effects?",
+      "answer": "Mild tingling for sensitive skin",
+      "category": "safety",
+      "importance_score": 70,
+      "search_intent": "general",
+      "answer_completeness": "brief"
+    },
+    {
+      "question": "Is this suitable for sensitive skin?",
+      "answer": "May cause mild reactions in sensitive skin. Patch test recommended.",
+      "category": "safety",
+      "importance_score": 70,
+      "search_intent": "general",
+      "answer_completeness": "brief"
+    },
+    {
+      "question": "Can I use this with other skincare products?",
+      "answer": "Consider your skin sensitivity as this product may cause mild tingling for sensitive skin.",
+      "category": "safety",
+      "importance_score": 70,
+      "search_intent": "general",
+      "answer_completeness": "adequate"
+    },
+    {
+      "question": "How do I use this product?",
+      "answer": "Apply 2–3 drops in the morning before sunscreen",
+      "category": "usage",
+      "importance_score": 70,
+      "search_intent": "instructional",
+      "answer_completeness": "brief"
+    },
+    {
+      "question": "How long before I see results?",
+      "answer": "Results typically become visible after 4-6 weeks of consistent use.",
+      "category": "usage",
+      "importance_score": 70,
+      "search_intent": "instructional",
+      "answer_completeness": "brief"
+    }
+  ],
+  "total_questions": 18,
+  "category_distribution": {
+    "safety": 3,
+    "usage": 3,
+    "informational": 3,
+    "purchase": 5,
+    "comparison": 4
+  },
+  "question_quality_score": 100,
+  "product_overview": {
+    "name": "GlowBoost Vitamin C Serum",
+    "concentration": "10% Vitamin C",
+    "key_benefits": "Brightening, Fades dark spots"
+  },
+  "contact_info": {
+    "support_message": "For additional questions, please contact our support team",
+    "last_updated": "2025-12-26T16:39:16.396Z"
+  }
+}

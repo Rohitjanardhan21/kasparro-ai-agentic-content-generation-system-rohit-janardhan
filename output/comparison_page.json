@@ -1,0 +1,39 @@
+{
+  "comparison_info": {
+    "title": "Product Comparison: {{product.name}} vs {{comparison_product.name}}",
+    "type": "side_by_side_comparison"
+  },
+  "product_a": {
+    "name": "GlowBoost Vitamin C Serum",
+    "concentration": "10% Vitamin C",
+    "price": "₹699",
+    "ingredients": "Vitamin C, Hyaluronic Acid",
+    "benefits": "Brightening, Fades dark spots"
+  },
+  "product_b": {
+    "name": "RadiantGlow Vitamin C Complex",
+    "concentration": "15% Vitamin C",
+    "price": "₹899",
+    "ingredients": "Vitamin C, Vitamin E, Niacinamide",
+    "benefits": "Anti-aging, Hydrating, Pore minimizing"
+  },
+  "common_ingredients": [
+    "Vitamin C"
+  ],
+  "unique_to_product_a": [
+    "Hyaluronic Acid"
+  ],
+  "unique_to_product_b": [
+    "Vitamin E",
+    "Niacinamide"
+  ],
+  "ingredient_overlap_percentage": 33,
+  "ingredient_analysis": {
+    "synergy_score": 75,
+    "potency_comparison": "product_a_higher"
+  },
+  "analysis": {
+    "recommendation": "Choose based on your specific skin type and ingredient preferences",
+    "generated_at": "2025-12-26T16:39:16.399Z"
+  }
+}
