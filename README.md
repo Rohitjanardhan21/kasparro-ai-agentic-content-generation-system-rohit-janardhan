@@ -76,11 +76,55 @@ npm test
 
 ### Multi-Agent Workflow (DAG)
 ```
-DataParserAgent
-    ├── QuestionGeneratorAgent ──→ FaqPageAgent
-    ├── ComparisonDataAgent ────→ ComparisonPageAgent  
-    ├── ProductPageAgent
-    └── [AnalyticsAgent, SeoOptimizationAgent]
+                    ┌─────────────────┐
+                    │  DataParser     │ ← Validates & normalizes input
+                    │     Agent       │
+                    └─────────┬───────┘
+                              │
+                              ▼
+              ┌───────────────┼───────────────┐
+              │               │               │
+              ▼               ▼               ▼
+    ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+    │ Question    │ │ Comparison  │ │ Product     │
+    │ Generator   │ │ Data Agent  │ │ Page Agent  │ ← Parallel execution
+    │ 18+ Q&As    │ │ Fictional B │ │ Specs page  │
+    └─────┬───────┘ └─────┬───────┘ └─────────────┘
+          │               │
+          ▼               ▼
+    ┌─────────────┐ ┌─────────────┐
+    │ FAQ Page    │ │ Comparison  │ ← Template-based
+    │ Agent       │ │ Page Agent  │   generation
+    └─────┬───────┘ └─────┬───────┘
+          │               │
+          └───────┬───────┘
+                  │
+                  ▼
+          ┌───────┼───────┐
+          │               │
+          ▼               ▼
+    ┌─────────────┐ ┌─────────────┐
+    │ Analytics   │ │ SEO         │ ← Intelligence layer
+    │ Agent       │ │ Optimizer   │
+    │ Performance │ │ Keywords    │
+    └─────────────┘ └─────────────┘
+```
+
+### Core System Components
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Content Generation System                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────────┐    ┌──────────────────┐    ┌─────────────┐ │
+│  │   Orchestrator  │────│  Template Engine │────│   Content   │ │
+│  │                 │    │                  │    │   Blocks    │ │
+│  │ • DAG execution │    │ • Field mapping  │    │ • Transform │ │
+│  │ • Dependencies  │    │ • Block execution│    │ • Validate  │ │
+│  │ • Error handling│    │ • Variable interp│    │ • Enrich    │ │
+│  └─────────────────┘    └──────────────────┘    └─────────────┘ │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ### Template Engine
@@ -130,6 +174,50 @@ npm test
 - ✅ Enhanced content blocks (detailed insights)
 - ✅ JSON structure validation
 - ✅ Performance monitoring
+
+## 📖 Documentation & Maintainability
+
+### 📋 **Code Style Philosophy**
+This codebase follows the principle: **"Write code as if the person who maintains it is a violent psychopath who knows where you live."**
+
+- **Clarity over cleverness** - Readable code beats clever one-liners
+- **Self-documenting names** - Functions and variables explain their purpose
+- **Single responsibility** - Each function/class has one clear job
+- **Explicit error handling** - Fail fast with meaningful messages
+
+### 📚 **Documentation Structure**
+- **[System Architecture](docs/system_architecture.md)** - Visual diagrams and design decisions
+- **[Code Style Guide](docs/code_style_guide.md)** - Maintainability principles and patterns
+- **[Project Documentation](docs/project_documentation.md)** - Complete system design overview
+
+### 🔧 **Maintainability Features**
+- **Comprehensive comments** - Complex logic explained inline
+- **Error context** - Meaningful error messages with debugging info
+- **Consistent patterns** - Same approach used throughout codebase
+- **Test coverage** - All major functionality validated
+- **Modular design** - Easy to modify individual components
+
+### 🎯 **For Future Maintainers**
+```javascript
+// Example of maintainable code style
+/**
+ * Calculate question importance for FAQ prioritization
+ * 
+ * Algorithm: Base score + category bonuses + relevance factors
+ * - Safety questions: +20 (user safety is paramount)
+ * - Usage questions: +15 (practical value)
+ * - Product mentions: +10 (relevance)
+ */
+function calculateQuestionImportance(question, product) {
+  let score = 50; // Base score - middle ground for prioritization
+  
+  if (question.category === 'safety') score += 20;
+  if (question.category === 'usage') score += 15;
+  // ... clear, documented logic
+  
+  return Math.min(100, score);
+}
+```
 
 ## 📖 Documentation
 
