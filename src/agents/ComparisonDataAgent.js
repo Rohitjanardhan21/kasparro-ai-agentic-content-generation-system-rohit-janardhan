@@ -1,79 +1,322 @@
-import { Agent } from '../core/Agent.js';
+import { BaseAgent } from './BaseAgent.js';
+import { generateCompetitorName, generateCompetitorDetails } from '../blocks/ContentBlocks.js';
 
 /**
- * ComparisonDataAgent - creates fictional Product B for comparison
+ * ComparisonDataAgent - Generates fictional competitor data for comparisons
+ * 
+ * Responsibilities:
+ * - Create realistic competitor products
+ * - Generate comparison data
+ * - Ensure competitive differentiation
+ * - Maintain data consistency
  */
-export class ComparisonDataAgent extends Agent {
-  constructor() {
-    super('ComparisonDataAgent', ['DataParserAgent']);
+export class ComparisonDataAgent extends BaseAgent {
+  constructor(config = {}) {
+    super({
+      id: config.id || 'comparison_data_001',
+      name: 'ComparisonDataAgent',
+      autonomyLevel: config.autonomyLevel || 0.7,
+      adaptabilityLevel: config.adaptabilityLevel || 0.8,
+      learningRate: config.learningRate || 0.1
+    });
+
+    this.competitorTemplates = [
+      {
+        name_pattern: 'VitaGlow {type} {variant}',
+        price_modifier: 1.2,
+        strength_modifier: 1.1
+      },
+      {
+        name_pattern: 'BrightSkin {variant} {type}',
+        price_modifier: 0.9,
+        strength_modifier: 0.95
+      },
+      {
+        name_pattern: 'RadiantCare {type}',
+        price_modifier: 1.1,
+        strength_modifier: 1.05
+      }
+    ];
+
+    this.addGoal('generate_competitor_data');
+    this.addGoal('ensure_realistic_comparison');
   }
 
-  async process(input) {
-    const originalProduct = input.DataParserAgent.product;
+  /**
+   * Generate competitor product data
+   */
+  async generateCompetitorData(originalProduct) {
+    console.log(`🔍 [${this.name}] Generating competitor data...`);
     
-    // Generate fictional Product B with similar structure but different attributes
-    const comparisonProduct = this.generateComparisonProduct(originalProduct);
-    
-    return {
-      comparison_product: comparisonProduct,
-      comparison_type: 'competitive_analysis',
-      generated_at: new Date().toISOString()
+    const competitor = {
+      name: generateCompetitorName(originalProduct),
+      ...this.generateCompetitorSpecs(originalProduct),
+      generated_at: new Date().toISOString(),
+      comparison_type: 'fictional_competitor'
     };
+
+    // Ensure differentiation
+    this.ensureDifferentiation(competitor, originalProduct);
+    
+    // Validate realism
+    const validation = this.validateRealism(competitor, originalProduct);
+    competitor.validation = validation;
+
+    console.log(`✅ [${this.name}] Generated competitor: ${competitor.name}`);
+    
+    return competitor;
   }
 
-  generateComparisonProduct(originalProduct) {
-    // Create a fictional competing product with different characteristics
+  /**
+   * Generate competitor specifications
+   */
+  generateCompetitorSpecs(originalProduct) {
+    const basePrice = this.extractNumericPrice(originalProduct.price);
+    const template = this.selectCompetitorTemplate();
+    
     return {
-      name: 'RadiantGlow Vitamin C Complex',
-      concentration: '15% Vitamin C',
-      skinType: 'All skin types, Dry',
-      keyIngredients: 'Vitamin C, Vitamin E, Niacinamide',
-      benefits: 'Anti-aging, Hydrating, Pore minimizing',
-      howToUse: 'Apply 3-4 drops in the evening after cleansing',
-      sideEffects: 'May cause initial dryness for some users',
-      price: '₹899'
+      concentration: this.generateCompetitorConcentration(originalProduct.concentration),
+      keyIngredients: this.generateCompetitorIngredients(originalProduct.keyIngredients),
+      benefits: this.generateCompetitorBenefits(originalProduct.benefits),
+      skinType: this.generateCompetitorSkinType(originalProduct.skinType),
+      price: this.generateCompetitorPrice(basePrice, template.price_modifier),
+      howToUse: this.generateCompetitorUsage(originalProduct.howToUse),
+      sideEffects: this.generateCompetitorSideEffects(originalProduct.sideEffects),
+      template_used: template.name_pattern
     };
   }
 
   /**
-   * Generate comparison metrics between products
-   * @param {Object} productA - Original product
-   * @param {Object} productB - Comparison product
-   * @returns {Object} - Comparison analysis
+   * Select competitor template
    */
-  generateComparisonMetrics(productA, productB) {
-    const priceA = parseInt(productA.price.replace(/[^\d]/g, ''));
-    const priceB = parseInt(productB.price.replace(/[^\d]/g, ''));
+  selectCompetitorTemplate() {
+    return this.competitorTemplates[Math.floor(Math.random() * this.competitorTemplates.length)];
+  }
+
+  /**
+   * Generate competitor concentration
+   */
+  generateCompetitorConcentration(originalConcentration) {
+    if (!originalConcentration) return '12% Vitamin C';
     
-    return {
-      price_difference: priceB - priceA,
-      concentration_comparison: {
-        product_a: productA.concentration,
-        product_b: productB.concentration,
-        higher_concentration: productB.concentration.includes('15%') ? 'product_b' : 'product_a'
-      },
-      target_skin_overlap: this.calculateSkinTypeOverlap(productA.skinType, productB.skinType),
-      ingredient_analysis: this.analyzeIngredients(productA.keyIngredients, productB.keyIngredients)
+    const match = originalConcentration.match(/(\d+)%/);
+    if (match) {
+      const originalPercent = parseInt(match[1]);
+      const variations = [
+        `${originalPercent + 2}% Vitamin C`,
+        `${originalPercent - 1}% Vitamin C`,
+        `${originalPercent + 5}% Active Complex`,
+        `${Math.max(5, originalPercent - 3)}% Enhanced Formula`
+      ];
+      return variations[Math.floor(Math.random() * variations.length)];
+    }
+    
+    return '15% Active Formula';
+  }
+
+  /**
+   * Generate competitor ingredients
+   */
+  generateCompetitorIngredients(originalIngredients) {
+    const baseIngredients = ['Vitamin C', 'Niacinamide', 'Peptides', 'Hyaluronic Acid', 'Retinol'];
+    const originalList = originalIngredients ? originalIngredients.split(',').map(i => i.trim()) : [];
+    
+    // Keep some original ingredients, add some different ones
+    const competitorIngredients = [];
+    
+    // Add 1-2 original ingredients
+    if (originalList.length > 0) {
+      competitorIngredients.push(originalList[0]);
+      if (originalList.length > 1 && Math.random() > 0.5) {
+        competitorIngredients.push(originalList[1]);
+      }
+    }
+    
+    // Add different ingredients
+    const availableIngredients = baseIngredients.filter(ing => 
+      !competitorIngredients.some(comp => comp.toLowerCase().includes(ing.toLowerCase()))
+    );
+    
+    const additionalCount = Math.floor(Math.random() * 2) + 1;
+    for (let i = 0; i < additionalCount && i < availableIngredients.length; i++) {
+      competitorIngredients.push(availableIngredients[i]);
+    }
+    
+    return competitorIngredients.join(', ');
+  }
+
+  /**
+   * Generate competitor benefits
+   */
+  generateCompetitorBenefits(originalBenefits) {
+    const allBenefits = [
+      'Anti-aging', 'Brightening', 'Hydration', 'Firming', 
+      'Pore refinement', 'Even skin tone', 'Texture improvement',
+      'Antioxidant protection', 'Collagen support'
+    ];
+    
+    const originalList = originalBenefits ? originalBenefits.split(',').map(b => b.trim()) : [];
+    const competitorBenefits = [];
+    
+    // Keep some overlap (30-50%)
+    if (originalList.length > 0) {
+      const overlapCount = Math.max(1, Math.floor(originalList.length * 0.4));
+      for (let i = 0; i < overlapCount; i++) {
+        if (originalList[i]) {
+          competitorBenefits.push(originalList[i]);
+        }
+      }
+    }
+    
+    // Add different benefits
+    const availableBenefits = allBenefits.filter(benefit => 
+      !competitorBenefits.some(comp => comp.toLowerCase().includes(benefit.toLowerCase()))
+    );
+    
+    const additionalCount = Math.floor(Math.random() * 2) + 1;
+    for (let i = 0; i < additionalCount && i < availableBenefits.length; i++) {
+      competitorBenefits.push(availableBenefits[i]);
+    }
+    
+    return competitorBenefits.join(', ');
+  }
+
+  /**
+   * Generate competitor skin type
+   */
+  generateCompetitorSkinType(originalSkinType) {
+    const skinTypes = [
+      'All skin types',
+      'Oily, Acne-prone',
+      'Dry, Mature',
+      'Sensitive, Combination',
+      'Normal, Combination'
+    ];
+    
+    // 70% chance to target same skin type, 30% different
+    if (originalSkinType && Math.random() > 0.3) {
+      return originalSkinType;
+    }
+    
+    return skinTypes[Math.floor(Math.random() * skinTypes.length)];
+  }
+
+  /**
+   * Generate competitor price
+   */
+  generateCompetitorPrice(basePrice, modifier) {
+    const competitorPrice = Math.round(basePrice * modifier * (0.8 + Math.random() * 0.4));
+    return `₹${competitorPrice}`;
+  }
+
+  /**
+   * Generate competitor usage instructions
+   */
+  generateCompetitorUsage(originalUsage) {
+    const usageOptions = [
+      'Apply 2-3 drops twice daily after cleansing',
+      'Use 3-4 drops in the evening before moisturizer',
+      'Apply thin layer morning and night',
+      'Use 2 drops daily, can increase to twice daily',
+      'Apply evenly to face and neck once daily'
+    ];
+    
+    return usageOptions[Math.floor(Math.random() * usageOptions.length)];
+  }
+
+  /**
+   * Generate competitor side effects
+   */
+  generateCompetitorSideEffects(originalSideEffects) {
+    const sideEffectOptions = [
+      'Possible mild irritation',
+      'May cause initial dryness',
+      'Slight tingling sensation possible',
+      'Rare allergic reactions',
+      'Generally well tolerated'
+    ];
+    
+    return sideEffectOptions[Math.floor(Math.random() * sideEffectOptions.length)];
+  }
+
+  /**
+   * Ensure meaningful differentiation
+   */
+  ensureDifferentiation(competitor, original) {
+    // Ensure price difference is meaningful (at least 10%)
+    const originalPrice = this.extractNumericPrice(original.price);
+    const competitorPrice = this.extractNumericPrice(competitor.price);
+    
+    if (Math.abs(originalPrice - competitorPrice) / originalPrice < 0.1) {
+      const adjustment = originalPrice * 0.15 * (Math.random() > 0.5 ? 1 : -1);
+      competitor.price = `₹${Math.round(competitorPrice + adjustment)}`;
+    }
+    
+    // Ensure ingredient differentiation
+    const originalIngredients = (original.keyIngredients || '').toLowerCase();
+    const competitorIngredients = (competitor.keyIngredients || '').toLowerCase();
+    
+    if (originalIngredients === competitorIngredients) {
+      competitor.keyIngredients += ', Peptides';
+    }
+  }
+
+  /**
+   * Validate competitor realism
+   */
+  validateRealism(competitor, original) {
+    const validation = {
+      realistic: true,
+      issues: [],
+      score: 100
     };
-  }
-
-  calculateSkinTypeOverlap(skinTypeA, skinTypeB) {
-    const typesA = skinTypeA.split(',').map(t => t.trim().toLowerCase());
-    const typesB = skinTypeB.split(',').map(t => t.trim().toLowerCase());
-    const overlap = typesA.filter(type => typesB.includes(type));
-    return overlap.length / Math.max(typesA.length, typesB.length);
-  }
-
-  analyzeIngredients(ingredientsA, ingredientsB) {
-    const listA = ingredientsA.split(',').map(i => i.trim().toLowerCase());
-    const listB = ingredientsB.split(',').map(i => i.trim().toLowerCase());
-    const common = listA.filter(ing => listB.includes(ing));
     
+    // Check price realism (should be within 50% of original)
+    const originalPrice = this.extractNumericPrice(original.price);
+    const competitorPrice = this.extractNumericPrice(competitor.price);
+    const priceDiff = Math.abs(originalPrice - competitorPrice) / originalPrice;
+    
+    if (priceDiff > 0.5) {
+      validation.issues.push('Price difference too extreme');
+      validation.score -= 20;
+    }
+    
+    // Check ingredient count (should have 2-4 ingredients)
+    const ingredientCount = competitor.keyIngredients.split(',').length;
+    if (ingredientCount < 2 || ingredientCount > 4) {
+      validation.issues.push('Unrealistic ingredient count');
+      validation.score -= 15;
+    }
+    
+    // Check benefit count (should have 2-4 benefits)
+    const benefitCount = competitor.benefits.split(',').length;
+    if (benefitCount < 2 || benefitCount > 4) {
+      validation.issues.push('Unrealistic benefit count');
+      validation.score -= 10;
+    }
+    
+    validation.realistic = validation.score >= 70;
+    return validation;
+  }
+
+  /**
+   * Extract numeric price from price string
+   */
+  extractNumericPrice(priceString) {
+    if (!priceString) return 500; // Default price
+    const match = priceString.match(/\d+/);
+    return match ? parseInt(match[0]) : 500;
+  }
+
+  /**
+   * Get comparison generation statistics
+   */
+  getComparisonStats() {
     return {
-      common_ingredients: common,
-      unique_to_a: listA.filter(ing => !listB.includes(ing)),
-      unique_to_b: listB.filter(ing => !listA.includes(ing)),
-      similarity_score: common.length / Math.max(listA.length, listB.length)
+      agent: this.name,
+      competitor_templates: this.competitorTemplates.length,
+      generation_experiences: this.experiences.length,
+      autonomy_level: this.autonomyLevel
     };
   }
 }

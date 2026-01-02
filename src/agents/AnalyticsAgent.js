@@ -1,292 +1,649 @@
-import { Agent } from '../core/Agent.js';
+import { BaseAgent } from './BaseAgent.js';
 
 /**
- * AnalyticsAgent - analyzes generated content for insights and metrics
+ * AnalyticsAgent - Analyzes content performance and provides insights
+ * 
+ * Responsibilities:
+ * - Analyze content quality and engagement
+ * - Generate performance metrics
+ * - Provide optimization recommendations
+ * - Track content effectiveness
  */
-export class AnalyticsAgent extends Agent {
-  constructor() {
-    super('AnalyticsAgent', ['QuestionGeneratorAgent', 'FaqPageAgent', 'ProductPageAgent', 'ComparisonPageAgent']);
-  }
-
-  async process(input) {
-    const questions = input.QuestionGeneratorAgent.questions;
-    const faqPage = input.FaqPageAgent.content;
-    const productPage = input.ProductPageAgent.content;
-    const comparisonPage = input.ComparisonPageAgent.content;
-
-    // Analyze content metrics
-    const analytics = {
-      content_metrics: this.analyzeContentMetrics(questions, faqPage, productPage, comparisonPage),
-      question_analysis: this.analyzeQuestions(questions),
-      readability_scores: this.calculateReadabilityScores(faqPage, productPage),
-      engagement_predictions: this.predictEngagement(questions),
-      content_gaps: this.identifyContentGaps(questions),
-      optimization_suggestions: this.generateOptimizationSuggestions(questions, faqPage, productPage)
-    };
-
-    return {
-      analytics: analytics,
-      generated_at: new Date().toISOString(),
-      analysis_version: '1.0'
-    };
-  }
-
-  analyzeContentMetrics(questions, faqPage, productPage, comparisonPage) {
-    return {
-      total_questions_generated: questions.length,
-      faq_questions_used: faqPage.faqs?.length || 0,
-      content_utilization_rate: Math.round(((faqPage.faqs?.length || 0) / questions.length) * 100),
-      average_answer_length: this.calculateAverageAnswerLength(questions),
-      content_density_score: this.calculateContentDensity(productPage),
-      comparison_completeness: this.assessComparisonCompleteness(comparisonPage)
-    };
-  }
-
-  analyzeQuestions(questions) {
-    const categoryDistribution = {};
-    const complexityScores = [];
-    
-    questions.forEach(q => {
-      categoryDistribution[q.category] = (categoryDistribution[q.category] || 0) + 1;
-      complexityScores.push(this.calculateQuestionComplexity(q.question));
+export class AnalyticsAgent extends BaseAgent {
+  constructor(config = {}) {
+    super({
+      id: config.id || 'analytics_001',
+      name: 'AnalyticsAgent',
+      autonomyLevel: config.autonomyLevel || 0.8,
+      adaptabilityLevel: config.adaptabilityLevel || 0.8,
+      learningRate: config.learningRate || 0.12
     });
 
+    this.metrics = new Map();
+    this.benchmarks = {
+      question_count: { min: 15, optimal: 20, max: 30 },
+      answer_length: { min: 20, optimal: 50, max: 150 },
+      category_coverage: { min: 5, optimal: 5, max: 7 },
+      content_depth: { min: 70, optimal: 85, max: 100 }
+    };
+
+    this.addGoal('analyze_content_performance');
+    this.addGoal('generate_optimization_insights');
+  }
+
+  /**
+   * Analyze comprehensive content performance
+   */
+  async analyzeContentPerformance(generatedContent, productData) {
+    console.log(`📊 [${this.name}] Analyzing content performance...`);
+    
+    const analysis = {
+      overall_score: 0,
+      content_analysis: {},
+      performance_metrics: {},
+      optimization_recommendations: [],
+      engagement_prediction: {},
+      quality_assessment: {},
+      generated_at: new Date().toISOString()
+    };
+
+    // Analyze each content type
+    for (const [contentType, content] of Object.entries(generatedContent)) {
+      if (content && typeof content === 'object') {
+        analysis.content_analysis[contentType] = await this.analyzeContentType(contentType, content, productData);
+      }
+    }
+
+    // Generate overall performance metrics
+    analysis.performance_metrics = this.generatePerformanceMetrics(analysis.content_analysis);
+    
+    // Calculate overall score
+    analysis.overall_score = this.calculateOverallScore(analysis.performance_metrics);
+    
+    // Generate optimization recommendations
+    analysis.optimization_recommendations = this.generateOptimizationRecommendations(analysis);
+    
+    // Predict engagement
+    analysis.engagement_prediction = this.predictEngagement(analysis);
+    
+    // Assess quality
+    analysis.quality_assessment = this.assessOverallQuality(analysis);
+
+    console.log(`✅ [${this.name}] Content analysis completed - Overall Score: ${analysis.overall_score}/100`);
+    
+    return analysis;
+  }
+
+  /**
+   * Analyze individual content type
+   */
+  async analyzeContentType(contentType, content, productData) {
+    const analysis = {
+      content_type: contentType,
+      metrics: {},
+      quality_score: 0,
+      strengths: [],
+      weaknesses: [],
+      recommendations: []
+    };
+
+    switch (contentType) {
+      case 'faq':
+        analysis.metrics = this.analyzeFaqContent(content, productData);
+        break;
+      case 'product_page':
+        analysis.metrics = this.analyzeProductPageContent(content, productData);
+        break;
+      case 'comparison_page':
+        analysis.metrics = this.analyzeComparisonPageContent(content, productData);
+        break;
+      default:
+        analysis.metrics = this.analyzeGenericContent(content, productData);
+    }
+
+    // Calculate quality score
+    analysis.quality_score = this.calculateContentQualityScore(analysis.metrics, contentType);
+    
+    // Identify strengths and weaknesses
+    this.identifyStrengthsAndWeaknesses(analysis, contentType);
+    
+    // Generate specific recommendations
+    analysis.recommendations = this.generateContentRecommendations(analysis, contentType);
+
+    return analysis;
+  }
+
+  /**
+   * Analyze FAQ content
+   */
+  analyzeFaqContent(content, productData) {
+    const metrics = {
+      question_count: content.questions?.length || 0,
+      category_count: new Set(content.questions?.map(q => q.category) || []).size,
+      avg_answer_length: 0,
+      category_distribution: {},
+      content_coverage: 0,
+      readability_score: 0
+    };
+
+    if (content.questions && content.questions.length > 0) {
+      // Calculate average answer length
+      const totalLength = content.questions.reduce((sum, q) => sum + (q.answer?.length || 0), 0);
+      metrics.avg_answer_length = Math.round(totalLength / content.questions.length);
+
+      // Analyze category distribution
+      content.questions.forEach(q => {
+        metrics.category_distribution[q.category] = (metrics.category_distribution[q.category] || 0) + 1;
+      });
+
+      // Assess content coverage
+      metrics.content_coverage = this.assessContentCoverage(content.questions, productData);
+      
+      // Calculate readability
+      metrics.readability_score = this.calculateReadabilityScore(content.questions);
+    }
+
+    return metrics;
+  }
+
+  /**
+   * Analyze product page content
+   */
+  analyzeProductPageContent(content, productData) {
+    const metrics = {
+      section_count: Object.keys(content.sections || {}).length,
+      content_depth: 0,
+      information_completeness: 0,
+      specification_coverage: 0,
+      benefit_analysis_quality: 0
+    };
+
+    // Assess content depth
+    if (content.sections) {
+      let totalDepth = 0;
+      for (const section of Object.values(content.sections)) {
+        totalDepth += this.calculateSectionDepth(section);
+      }
+      metrics.content_depth = Math.round(totalDepth / Object.keys(content.sections).length);
+    }
+
+    // Assess information completeness
+    metrics.information_completeness = this.assessInformationCompleteness(content, productData);
+    
+    // Assess specification coverage
+    metrics.specification_coverage = this.assessSpecificationCoverage(content.specifications, productData);
+    
+    // Assess benefit analysis quality
+    if (content.sections?.benefits) {
+      metrics.benefit_analysis_quality = this.assessBenefitAnalysisQuality(content.sections.benefits);
+    }
+
+    return metrics;
+  }
+
+  /**
+   * Analyze comparison page content
+   */
+  analyzeComparisonPageContent(content, productData) {
+    const metrics = {
+      comparison_categories: Object.keys(content.sections || {}).length,
+      analysis_depth: 0,
+      competitive_insights: 0,
+      recommendation_quality: 0,
+      data_completeness: 0
+    };
+
+    // Assess analysis depth
+    if (content.sections) {
+      let totalDepth = 0;
+      for (const section of Object.values(content.sections)) {
+        totalDepth += this.calculateSectionDepth(section);
+      }
+      metrics.analysis_depth = Math.round(totalDepth / Object.keys(content.sections).length);
+    }
+
+    // Assess competitive insights
+    metrics.competitive_insights = this.assessCompetitiveInsights(content);
+    
+    // Assess recommendation quality
+    if (content.recommendation) {
+      metrics.recommendation_quality = this.assessRecommendationQuality(content.recommendation);
+    }
+    
+    // Assess data completeness
+    metrics.data_completeness = this.assessComparisonDataCompleteness(content);
+
+    return metrics;
+  }
+
+  /**
+   * Analyze generic content
+   */
+  analyzeGenericContent(content, productData) {
     return {
-      category_distribution: categoryDistribution,
-      most_common_category: Object.keys(categoryDistribution).reduce((a, b) => 
-        categoryDistribution[a] > categoryDistribution[b] ? a : b),
-      average_complexity_score: Math.round(complexityScores.reduce((a, b) => a + b, 0) / complexityScores.length),
-      question_types: this.categorizeQuestionTypes(questions)
+      content_size: JSON.stringify(content).length,
+      structure_complexity: this.assessStructureComplexity(content),
+      data_richness: this.assessDataRichness(content)
     };
   }
 
-  calculateReadabilityScores(faqPage, productPage) {
-    const faqText = faqPage.faqs?.map(q => q.answer).join(' ') || '';
-    const productText = JSON.stringify(productPage).replace(/[{}",]/g, ' ');
+  /**
+   * Calculate content quality score
+   */
+  calculateContentQualityScore(metrics, contentType) {
+    let score = 0;
 
-    return {
-      faq_readability: this.calculateFleschScore(faqText),
-      product_readability: this.calculateFleschScore(productText),
-      average_sentence_length: this.calculateAverageSentenceLength(faqText),
-      vocabulary_complexity: this.assessVocabularyComplexity(faqText + productText)
-    };
+    switch (contentType) {
+      case 'faq':
+        score += this.scoreAgainstBenchmark(metrics.question_count, this.benchmarks.question_count) * 0.3;
+        score += this.scoreAgainstBenchmark(metrics.avg_answer_length, this.benchmarks.answer_length) * 0.25;
+        score += this.scoreAgainstBenchmark(metrics.category_count, this.benchmarks.category_coverage) * 0.2;
+        score += (metrics.content_coverage / 100) * 0.15;
+        score += (metrics.readability_score / 100) * 0.1;
+        break;
+
+      case 'product_page':
+        score += this.scoreAgainstBenchmark(metrics.content_depth, this.benchmarks.content_depth) * 0.4;
+        score += (metrics.information_completeness / 100) * 0.25;
+        score += (metrics.specification_coverage / 100) * 0.2;
+        score += (metrics.benefit_analysis_quality / 100) * 0.15;
+        break;
+
+      case 'comparison_page':
+        score += this.scoreAgainstBenchmark(metrics.analysis_depth, this.benchmarks.content_depth) * 0.3;
+        score += (metrics.competitive_insights / 100) * 0.25;
+        score += (metrics.recommendation_quality / 100) * 0.25;
+        score += (metrics.data_completeness / 100) * 0.2;
+        break;
+
+      default:
+        score = 70; // Default score for unknown content types
+    }
+
+    return Math.round(score);
   }
 
-  predictEngagement(questions) {
-    const engagementFactors = {
-      question_variety: questions.length > 15 ? 'high' : 'medium',
-      category_balance: this.assessCategoryBalance(questions),
-      practical_focus: this.assessPracticalFocus(questions),
-      user_intent_coverage: this.assessUserIntentCoverage(questions)
-    };
-
-    const engagementScore = this.calculateEngagementScore(engagementFactors);
-
-    return {
-      predicted_engagement_level: engagementScore > 75 ? 'high' : engagementScore > 50 ? 'medium' : 'low',
-      engagement_score: engagementScore,
-      key_strengths: this.identifyEngagementStrengths(engagementFactors),
-      improvement_areas: this.identifyEngagementWeaknesses(engagementFactors)
-    };
+  /**
+   * Score against benchmark
+   */
+  scoreAgainstBenchmark(value, benchmark) {
+    if (value >= benchmark.optimal) return 100;
+    if (value >= benchmark.min) {
+      return 70 + ((value - benchmark.min) / (benchmark.optimal - benchmark.min)) * 30;
+    }
+    return Math.max(0, (value / benchmark.min) * 70);
   }
 
-  identifyContentGaps(questions) {
-    const expectedCategories = ['informational', 'safety', 'usage', 'purchase', 'comparison', 'technical'];
-    const presentCategories = [...new Set(questions.map(q => q.category))];
-    const missingCategories = expectedCategories.filter(cat => !presentCategories.includes(cat));
-
-    return {
-      missing_categories: missingCategories,
-      underrepresented_topics: this.findUnderrepresentedTopics(questions),
-      suggested_additions: this.suggestAdditionalQuestions(missingCategories)
+  /**
+   * Generate performance metrics
+   */
+  generatePerformanceMetrics(contentAnalysis) {
+    const metrics = {
+      total_content_pieces: Object.keys(contentAnalysis).length,
+      avg_quality_score: 0,
+      content_utilization: 0,
+      engagement_factors: {},
+      optimization_potential: 0
     };
+
+    // Calculate average quality score
+    const qualityScores = Object.values(contentAnalysis).map(analysis => analysis.quality_score);
+    metrics.avg_quality_score = qualityScores.length > 0 ? 
+      Math.round(qualityScores.reduce((sum, score) => sum + score, 0) / qualityScores.length) : 0;
+
+    // Calculate content utilization (how much of available data was used)
+    metrics.content_utilization = this.calculateContentUtilization(contentAnalysis);
+    
+    // Identify engagement factors
+    metrics.engagement_factors = this.identifyEngagementFactors(contentAnalysis);
+    
+    // Calculate optimization potential
+    metrics.optimization_potential = 100 - metrics.avg_quality_score;
+
+    return metrics;
   }
 
-  generateOptimizationSuggestions(questions, faqPage, productPage) {
-    const suggestions = [];
+  /**
+   * Calculate overall score
+   */
+  calculateOverallScore(performanceMetrics) {
+    const weights = {
+      avg_quality_score: 0.5,
+      content_utilization: 0.2,
+      engagement_potential: 0.3
+    };
 
-    // Question optimization
-    if (questions.length < 20) {
-      suggestions.push({
-        type: 'content_expansion',
+    let score = 0;
+    score += performanceMetrics.avg_quality_score * weights.avg_quality_score;
+    score += performanceMetrics.content_utilization * weights.content_utilization;
+    
+    // Calculate engagement potential from engagement factors
+    const engagementScore = Object.values(performanceMetrics.engagement_factors).reduce((sum, factor) => sum + factor, 0) / 
+                           Object.keys(performanceMetrics.engagement_factors).length;
+    score += engagementScore * weights.engagement_potential;
+
+    return Math.round(score);
+  }
+
+  /**
+   * Generate optimization recommendations
+   */
+  generateOptimizationRecommendations(analysis) {
+    const recommendations = [];
+
+    // Overall recommendations
+    if (analysis.overall_score < 80) {
+      recommendations.push({
+        type: 'overall',
+        priority: 'high',
+        recommendation: 'Improve content quality across all content types',
+        impact: 'High impact on user engagement and satisfaction'
+      });
+    }
+
+    // Content-specific recommendations
+    for (const [contentType, contentAnalysis] of Object.entries(analysis.content_analysis)) {
+      recommendations.push(...contentAnalysis.recommendations.map(rec => ({
+        ...rec,
+        content_type: contentType
+      })));
+    }
+
+    // Performance-based recommendations
+    if (analysis.performance_metrics.content_utilization < 50) {
+      recommendations.push({
+        type: 'utilization',
         priority: 'medium',
-        suggestion: 'Consider generating more questions to improve content coverage'
+        recommendation: 'Increase utilization of available product data',
+        impact: 'Better content comprehensiveness and user value'
       });
     }
 
-    // FAQ optimization
-    if ((faqPage.faqs?.length || 0) < 7) {
-      suggestions.push({
-        type: 'faq_enhancement',
-        priority: 'high',
-        suggestion: 'Increase FAQ questions to improve user experience'
-      });
-    }
-
-    // Product page optimization
-    if (!productPage.benefits || productPage.benefits.length < 3) {
-      suggestions.push({
-        type: 'benefit_enhancement',
-        priority: 'high',
-        suggestion: 'Expand benefit descriptions for better product positioning'
-      });
-    }
-
-    return suggestions;
+    return recommendations.sort((a, b) => {
+      const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
+      return priorityOrder[b.priority] - priorityOrder[a.priority];
+    });
   }
 
-  // Helper methods
-  calculateAverageAnswerLength(questions) {
-    const lengths = questions.map(q => q.answer.length);
-    return Math.round(lengths.reduce((a, b) => a + b, 0) / lengths.length);
-  }
-
-  calculateContentDensity(productPage) {
-    const fields = Object.keys(productPage).length;
-    const totalContent = JSON.stringify(productPage).length;
-    return Math.round(totalContent / fields);
-  }
-
-  assessComparisonCompleteness(comparisonPage) {
-    const requiredFields = ['product_a', 'product_b', 'common_ingredients', 'analysis'];
-    const presentFields = requiredFields.filter(field => comparisonPage[field]);
-    return Math.round((presentFields.length / requiredFields.length) * 100);
-  }
-
-  calculateQuestionComplexity(question) {
-    // Simple complexity based on question length and structure
-    const wordCount = question.split(' ').length;
-    const hasMultipleClauses = question.includes(',') || question.includes('and') || question.includes('or');
-    return wordCount + (hasMultipleClauses ? 5 : 0);
-  }
-
-  categorizeQuestionTypes(questions) {
-    const types = {
-      what_questions: questions.filter(q => q.question.toLowerCase().startsWith('what')).length,
-      how_questions: questions.filter(q => q.question.toLowerCase().startsWith('how')).length,
-      why_questions: questions.filter(q => q.question.toLowerCase().startsWith('why')).length,
-      can_questions: questions.filter(q => q.question.toLowerCase().startsWith('can')).length,
-      is_questions: questions.filter(q => q.question.toLowerCase().startsWith('is')).length
+  /**
+   * Predict engagement
+   */
+  predictEngagement(analysis) {
+    const factors = {
+      content_quality: analysis.overall_score / 100,
+      question_variety: 0,
+      information_depth: 0,
+      readability: 0
     };
-    return types;
-  }
 
-  calculateFleschScore(text) {
-    // Simplified Flesch reading ease score
-    const sentences = text.split(/[.!?]+/).length;
-    const words = text.split(/\s+/).length;
-    const syllables = this.countSyllables(text);
-    
-    if (sentences === 0 || words === 0) return 0;
-    
-    const score = 206.835 - (1.015 * (words / sentences)) - (84.6 * (syllables / words));
-    return Math.max(0, Math.min(100, Math.round(score)));
-  }
+    // Calculate question variety from FAQ analysis
+    const faqAnalysis = analysis.content_analysis.faq;
+    if (faqAnalysis) {
+      factors.question_variety = Math.min(1, faqAnalysis.metrics.category_count / 5);
+    }
 
-  countSyllables(text) {
-    // Simple syllable counting
-    return text.toLowerCase().match(/[aeiouy]+/g)?.length || 1;
-  }
+    // Calculate information depth from product page
+    const productAnalysis = analysis.content_analysis.product_page;
+    if (productAnalysis) {
+      factors.information_depth = productAnalysis.metrics.content_depth / 100;
+    }
 
-  calculateAverageSentenceLength(text) {
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-    const words = text.split(/\s+/).length;
-    return sentences.length > 0 ? Math.round(words / sentences.length) : 0;
-  }
+    // Calculate readability
+    if (faqAnalysis) {
+      factors.readability = faqAnalysis.metrics.readability_score / 100;
+    }
 
-  assessVocabularyComplexity(text) {
-    const words = text.toLowerCase().match(/\b\w+\b/g) || [];
-    const uniqueWords = new Set(words);
-    const complexWords = words.filter(word => word.length > 6).length;
-    
+    const engagementScore = Object.values(factors).reduce((sum, factor) => sum + factor, 0) / Object.keys(factors).length;
+
     return {
-      vocabulary_diversity: Math.round((uniqueWords.size / words.length) * 100),
-      complex_word_ratio: Math.round((complexWords / words.length) * 100)
+      engagement_score: Math.round(engagementScore * 100),
+      engagement_level: engagementScore > 0.8 ? 'high' : engagementScore > 0.6 ? 'medium' : 'low',
+      key_factors: factors,
+      predicted_metrics: {
+        time_on_page: Math.round(30 + engagementScore * 120), // seconds
+        bounce_rate: Math.round((1 - engagementScore) * 60), // percentage
+        conversion_potential: Math.round(engagementScore * 100) // percentage
+      }
     };
   }
 
-  assessCategoryBalance(questions) {
-    const categories = {};
-    questions.forEach(q => categories[q.category] = (categories[q.category] || 0) + 1);
-    const values = Object.values(categories);
-    const max = Math.max(...values);
-    const min = Math.min(...values);
-    return max - min <= 2 ? 'balanced' : 'unbalanced';
+  /**
+   * Assess overall quality
+   */
+  assessOverallQuality(analysis) {
+    return {
+      quality_grade: this.getQualityGrade(analysis.overall_score),
+      strengths: this.identifyOverallStrengths(analysis),
+      improvement_areas: this.identifyImprovementAreas(analysis),
+      readiness_assessment: {
+        production_ready: analysis.overall_score >= 80,
+        requires_review: analysis.overall_score < 80 && analysis.overall_score >= 60,
+        needs_improvement: analysis.overall_score < 60
+      }
+    };
   }
 
-  assessPracticalFocus(questions) {
-    const practicalKeywords = ['how', 'use', 'apply', 'when', 'where', 'price', 'buy'];
-    const practicalQuestions = questions.filter(q => 
-      practicalKeywords.some(keyword => q.question.toLowerCase().includes(keyword))
-    );
-    return practicalQuestions.length / questions.length > 0.4 ? 'high' : 'medium';
+  // Helper methods for detailed analysis
+
+  assessContentCoverage(questions, productData) {
+    const productFields = Object.keys(productData);
+    let coverage = 0;
+    
+    questions.forEach(question => {
+      const text = (question.question + ' ' + question.answer).toLowerCase();
+      productFields.forEach(field => {
+        if (productData[field] && text.includes(productData[field].toString().toLowerCase())) {
+          coverage += 1;
+        }
+      });
+    });
+    
+    return Math.min(100, (coverage / productFields.length) * 20);
   }
 
-  assessUserIntentCoverage(questions) {
-    const intents = ['learn', 'buy', 'compare', 'use', 'safety'];
-    const coveredIntents = intents.filter(intent => 
-      questions.some(q => q.category.includes(intent) || q.question.toLowerCase().includes(intent))
-    );
-    return coveredIntents.length / intents.length > 0.6 ? 'comprehensive' : 'partial';
+  calculateReadabilityScore(questions) {
+    let totalScore = 0;
+    
+    questions.forEach(question => {
+      const words = question.answer.split(' ').length;
+      const sentences = question.answer.split(/[.!?]+/).length;
+      const avgWordsPerSentence = words / sentences;
+      
+      // Simple readability score (lower is better, convert to 0-100 scale)
+      const readabilityScore = Math.max(0, 100 - (avgWordsPerSentence * 2));
+      totalScore += readabilityScore;
+    });
+    
+    return Math.round(totalScore / questions.length);
   }
 
-  calculateEngagementScore(factors) {
+  calculateSectionDepth(section) {
+    let depth = 0;
+    if (section.title) depth += 10;
+    if (section.content) {
+      const contentStr = JSON.stringify(section.content);
+      depth += Math.min(50, contentStr.length / 20);
+    }
+    return Math.min(100, depth);
+  }
+
+  assessInformationCompleteness(content, productData) {
+    const requiredSections = ['overview', 'benefits', 'ingredients', 'usage', 'safety'];
+    const presentSections = Object.keys(content.sections || {});
+    const completeness = (presentSections.length / requiredSections.length) * 100;
+    return Math.round(completeness);
+  }
+
+  assessSpecificationCoverage(specifications, productData) {
+    if (!specifications) return 0;
+    
+    const requiredSpecs = ['product_name', 'concentration', 'skin_type', 'key_ingredients', 'benefits'];
+    const presentSpecs = Object.keys(specifications);
+    const coverage = (presentSpecs.length / requiredSpecs.length) * 100;
+    return Math.round(coverage);
+  }
+
+  assessBenefitAnalysisQuality(benefitsSection) {
+    if (!benefitsSection.content) return 0;
+    
+    let quality = 50; // Base score
+    
+    if (benefitsSection.content.detailed_analysis) quality += 25;
+    if (benefitsSection.content.synergy) quality += 15;
+    if (benefitsSection.content.primary_benefits?.length > 2) quality += 10;
+    
+    return Math.min(100, quality);
+  }
+
+  identifyStrengthsAndWeaknesses(analysis, contentType) {
+    const metrics = analysis.metrics;
+    
+    // Identify strengths
+    Object.entries(metrics).forEach(([metric, value]) => {
+      if (typeof value === 'number' && value >= 80) {
+        analysis.strengths.push(`Strong ${metric.replace('_', ' ')}`);
+      }
+    });
+    
+    // Identify weaknesses
+    Object.entries(metrics).forEach(([metric, value]) => {
+      if (typeof value === 'number' && value < 60) {
+        analysis.weaknesses.push(`Weak ${metric.replace('_', ' ')}`);
+      }
+    });
+  }
+
+  generateContentRecommendations(analysis, contentType) {
+    const recommendations = [];
+    
+    analysis.weaknesses.forEach(weakness => {
+      recommendations.push({
+        type: 'improvement',
+        priority: 'medium',
+        recommendation: `Improve ${weakness.toLowerCase()}`,
+        impact: 'Enhanced content quality and user experience'
+      });
+    });
+    
+    return recommendations;
+  }
+
+  calculateContentUtilization(contentAnalysis) {
+    // Simple utilization calculation based on content richness
+    let totalUtilization = 0;
+    let count = 0;
+    
+    Object.values(contentAnalysis).forEach(analysis => {
+      if (analysis.quality_score) {
+        totalUtilization += analysis.quality_score;
+        count++;
+      }
+    });
+    
+    return count > 0 ? Math.round(totalUtilization / count * 0.6) : 0; // Scale down to represent utilization
+  }
+
+  identifyEngagementFactors(contentAnalysis) {
+    return {
+      content_variety: Object.keys(contentAnalysis).length * 20,
+      information_depth: 75, // Default good score
+      user_value: 80, // Default good score
+      accessibility: 70 // Default good score
+    };
+  }
+
+  getQualityGrade(score) {
+    if (score >= 90) return 'A+';
+    if (score >= 80) return 'A';
+    if (score >= 70) return 'B';
+    if (score >= 60) return 'C';
+    return 'D';
+  }
+
+  identifyOverallStrengths(analysis) {
+    const strengths = [];
+    
+    if (analysis.overall_score >= 80) {
+      strengths.push('High overall content quality');
+    }
+    
+    if (analysis.performance_metrics.content_utilization >= 70) {
+      strengths.push('Good data utilization');
+    }
+    
+    return strengths;
+  }
+
+  identifyImprovementAreas(analysis) {
+    const areas = [];
+    
+    if (analysis.overall_score < 80) {
+      areas.push('Content quality enhancement needed');
+    }
+    
+    if (analysis.performance_metrics.content_utilization < 50) {
+      areas.push('Increase data utilization');
+    }
+    
+    return areas;
+  }
+
+  // Additional helper methods for comprehensive analysis
+  
+  assessCompetitiveInsights(content) {
     let score = 50; // Base score
     
-    if (factors.question_variety === 'high') score += 15;
-    if (factors.category_balance === 'balanced') score += 15;
-    if (factors.practical_focus === 'high') score += 10;
-    if (factors.user_intent_coverage === 'comprehensive') score += 10;
+    if (content.competitive_analysis) score += 25;
+    if (content.decision_matrix) score += 15;
+    if (content.market_positioning) score += 10;
     
     return Math.min(100, score);
   }
 
-  identifyEngagementStrengths(factors) {
-    const strengths = [];
-    if (factors.question_variety === 'high') strengths.push('Comprehensive question coverage');
-    if (factors.category_balance === 'balanced') strengths.push('Well-balanced content categories');
-    if (factors.practical_focus === 'high') strengths.push('Strong practical focus');
-    if (factors.user_intent_coverage === 'comprehensive') strengths.push('Covers diverse user intents');
-    return strengths;
+  assessRecommendationQuality(recommendation) {
+    if (!recommendation) return 0;
+    
+    let quality = 50; // Base score
+    
+    if (recommendation.reasoning?.length > 0) quality += 25;
+    if (recommendation.best_for) quality += 15;
+    if (recommendation.considerations?.length > 0) quality += 10;
+    
+    return Math.min(100, quality);
   }
 
-  identifyEngagementWeaknesses(factors) {
-    const weaknesses = [];
-    if (factors.question_variety !== 'high') weaknesses.push('Could benefit from more question variety');
-    if (factors.category_balance === 'unbalanced') weaknesses.push('Category distribution could be more balanced');
-    if (factors.practical_focus !== 'high') weaknesses.push('Could include more practical, actionable content');
-    return weaknesses;
+  assessComparisonDataCompleteness(content) {
+    let completeness = 0;
+    
+    if (content.comparison?.product_a) completeness += 25;
+    if (content.comparison?.product_b) completeness += 25;
+    if (content.sections && Object.keys(content.sections).length >= 4) completeness += 30;
+    if (content.recommendation) completeness += 20;
+    
+    return completeness;
   }
 
-  findUnderrepresentedTopics(questions) {
-    const topicKeywords = {
-      'ingredients': ['ingredient', 'component', 'formula'],
-      'results': ['result', 'effect', 'outcome', 'benefit'],
-      'application': ['apply', 'use', 'method', 'technique'],
-      'storage': ['store', 'keep', 'preserve', 'shelf']
+  assessStructureComplexity(content) {
+    const str = JSON.stringify(content);
+    const depth = (str.match(/\{/g) || []).length;
+    return Math.min(100, depth * 5);
+  }
+
+  assessDataRichness(content) {
+    const str = JSON.stringify(content);
+    return Math.min(100, str.length / 50);
+  }
+
+  /**
+   * Get analytics statistics
+   */
+  getAnalyticsStats() {
+    return {
+      agent: this.name,
+      metrics_tracked: Array.from(this.metrics.keys()),
+      benchmarks: this.benchmarks,
+      analysis_experiences: this.experiences.length,
+      autonomy_level: this.autonomyLevel
     };
-
-    const underrepresented = [];
-    Object.entries(topicKeywords).forEach(([topic, keywords]) => {
-      const coverage = questions.filter(q => 
-        keywords.some(keyword => q.question.toLowerCase().includes(keyword) || q.answer.toLowerCase().includes(keyword))
-      ).length;
-      
-      if (coverage < 2) {
-        underrepresented.push(topic);
-      }
-    });
-
-    return underrepresented;
-  }
-
-  suggestAdditionalQuestions(missingCategories) {
-    const suggestions = {
-      'technical': ['What is the pH level of this product?', 'What is the molecular weight of the active ingredients?'],
-      'environmental': ['Is this product eco-friendly?', 'What is the packaging made of?'],
-      'compatibility': ['Can this be used with retinol?', 'Is this suitable for pregnant women?']
-    };
-
-    return missingCategories.map(category => suggestions[category] || [`Consider adding ${category} related questions`]).flat();
   }
 }

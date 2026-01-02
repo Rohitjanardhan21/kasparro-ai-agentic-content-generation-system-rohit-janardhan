@@ -1,67 +1,130 @@
 /**
- * Template definitions for different page types
+ * Template Definitions - FAQ, Product, and Comparison page templates
+ * 
+ * Templates use:
+ * - $field:fieldName for direct data mapping
+ * - $block:blockName for content block execution
+ * - {{variable}} for variable interpolation
  */
 
 export const FAQ_PAGE_TEMPLATE = {
-  page_info: {
-    title: "{{product.name}} - Frequently Asked Questions",
-    type: "faq",
-    "$field:product.name": "product_name"
-  },
-  "$block:generateFaqBlock": {
-    limit: 5,
-    category: null
-  },
-  product_overview: {
-    "$field:product.name": "name",
-    "$field:product.concentration": "concentration",
-    "$field:product.benefits": "key_benefits"
-  },
-  contact_info: {
-    support_message: "For additional questions, please contact our support team",
-    last_updated: "{{metadata.generated_at}}"
+  title: "Frequently Asked Questions - {{productName}}",
+  description: "Common questions and answers about {{productName}}",
+  categories: [
+    "informational",
+    "safety", 
+    "usage",
+    "purchase",
+    "comparison"
+  ],
+  questions: "$block:generateQuestions",
+  metadata: {
+    generated_at: "$field:timestamp",
+    product_name: "$field:productName",
+    total_questions: "$block:countQuestions",
+    content_quality: "$block:assessContentQuality"
   }
 };
 
 export const PRODUCT_PAGE_TEMPLATE = {
-  product_info: {
-    "$field:product.name": "title",
-    "$field:product.concentration": "concentration",
-    description: "Premium skincare solution for {{product.skinType}} skin"
+  title: "$field:productName",
+  subtitle: "{{concentration}} skincare solution for {{skinType}}",
+  sections: {
+    overview: {
+      title: "Product Overview",
+      content: "$block:generateOverview"
+    },
+    benefits: {
+      title: "Key Benefits", 
+      content: "$block:generateBenefits"
+    },
+    ingredients: {
+      title: "Active Ingredients",
+      content: "$block:generateIngredients"
+    },
+    usage: {
+      title: "How to Use",
+      content: "$block:generateUsage"
+    },
+    safety: {
+      title: "Safety Information",
+      content: "$block:generateSafety"
+    }
   },
-  "$block:generateSpecsBlock": {},
-  "$block:generateBenefitsBlock": {},
-  "$block:extractUsageBlock": {},
-  "$block:generateSafetyBlock": {},
-  "$block:generatePricingBlock": {},
+  specifications: "$block:generateSpecs",
+  pricing: {
+    price: "$field:price",
+    analysis: "$block:generatePricing"
+  },
   metadata: {
-    page_type: "product_description",
-    generated_at: "{{metadata.generated_at}}"
+    generated_at: "$field:timestamp",
+    skin_type: "$field:skinType",
+    concentration: "$field:concentration"
   }
 };
 
 export const COMPARISON_PAGE_TEMPLATE = {
-  comparison_info: {
-    title: "Product Comparison: {{product.name}} vs {{comparison_product.name}}",
-    type: "side_by_side_comparison"
+  title: "Product Comparison - {{productName}}",
+  subtitle: "Compare {{productName}} with similar products",
+  comparison: {
+    product_a: {
+      name: "$field:productName",
+      details: "$block:generateProductDetails"
+    },
+    product_b: {
+      name: "$block:generateCompetitorName",
+      details: "$block:generateCompetitorDetails"
+    },
+    analysis: "$block:generateComparisonAnalysis"
   },
-  product_a: {
-    "$field:product.name": "name",
-    "$field:product.concentration": "concentration",
-    "$field:product.price": "price",
-    "$field:product.keyIngredients": "ingredients",
-    "$field:product.benefits": "benefits"
+  sections: {
+    ingredients: {
+      title: "Ingredient Comparison",
+      content: "$block:compareIngredients"
+    },
+    benefits: {
+      title: "Benefits Analysis", 
+      content: "$block:compareBenefits"
+    },
+    pricing: {
+      title: "Value Comparison",
+      content: "$block:comparePricing"
+    },
+    usage: {
+      title: "Usage Comparison",
+      content: "$block:compareUsage"
+    },
+    safety: {
+      title: "Safety Profile",
+      content: "$block:compareSafety"
+    }
   },
-  product_b: {
-    "$field:comparison_product.name": "name",
-    "$field:comparison_product.concentration": "concentration", 
-    "$field:comparison_product.price": "price",
-    "$field:comparison_product.keyIngredients": "ingredients",
-    "$field:comparison_product.benefits": "benefits"
-  },
-  "$block:compareIngredientsBlock": {},
-  analysis: {
-    recommendation: "Choose based on your specific skin type and ingredient preferences",
-    generated_at: "{{metadata.generated_at}}"
+  recommendation: "$block:generateRecommendation",
+  metadata: {
+    generated_at: "$field:timestamp",
+    comparison_type: "product_vs_competitor"
   }
 };
+
+/**
+ * Template registry for easy access
+ */
+export const TEMPLATES = {
+  faq: FAQ_PAGE_TEMPLATE,
+  product_page: PRODUCT_PAGE_TEMPLATE,
+  comparison_page: COMPARISON_PAGE_TEMPLATE
+};
+
+/**
+ * Get template by name
+ */
+export function getTemplate(name) {
+  return TEMPLATES[name];
+}
+
+/**
+ * Get all available templates
+ */
+export function getAllTemplates() {
+  return TEMPLATES;
+}

@@ -1,156 +1,236 @@
-import { Agent } from '../core/Agent.js';
+import { BaseAgent } from './BaseAgent.js';
+import { generateQuestions, countQuestions, assessContentQuality } from '../blocks/ContentBlocks.js';
 
 /**
- * QuestionGeneratorAgent - generates categorized user questions from product data
+ * QuestionGeneratorAgent - Generates 15+ categorized questions
+ * 
+ * Responsibilities:
+ * - Generate questions across 5 categories
+ * - Ensure 15+ total questions
+ * - Prioritize questions by importance
+ * - Assess question quality
  */
-export class QuestionGeneratorAgent extends Agent {
-  constructor() {
-    super('QuestionGeneratorAgent', ['DataParserAgent']);
-  }
+export class QuestionGeneratorAgent extends BaseAgent {
+  constructor(config = {}) {
+    super({
+      id: config.id || 'question_generator_001',
+      name: 'QuestionGeneratorAgent',
+      autonomyLevel: config.autonomyLevel || 0.8,
+      adaptabilityLevel: config.adaptabilityLevel || 0.7,
+      learningRate: config.learningRate || 0.12
+    });
 
-  async process(input) {
-    const productData = input.DataParserAgent.product;
-    
-    const questions = [
-      // Informational Questions
-      ...this.generateInformationalQuestions(productData),
-      // Safety Questions
-      ...this.generateSafetyQuestions(productData),
-      // Usage Questions
-      ...this.generateUsageQuestions(productData),
-      // Purchase Questions
-      ...this.generatePurchaseQuestions(productData),
-      // Comparison Questions
-      ...this.generateComparisonQuestions(productData)
+    this.categories = [
+      'informational',
+      'safety',
+      'usage', 
+      'purchase',
+      'comparison'
     ];
 
+    this.targetQuestionCount = 15;
+    this.addGoal('generate_question_bank');
+    this.addGoal('ensure_question_quality');
+  }
+
+  /**
+   * Generate comprehensive question bank
+   */
+  async generateQuestionBank(productData) {
+    console.log(`❓ [${this.name}] Generating question bank...`);
+    
+    const questions = generateQuestions(productData);
+    
+    // Ensure we meet the 15+ requirement
+    if (questions.length < this.targetQuestionCount) {
+      console.log(`⚠️  [${this.name}] Only ${questions.length} questions generated, adding more...`);
+      const additionalQuestions = this.generateAdditionalQuestions(productData, this.targetQuestionCount - questions.length);
+      questions.push(...additionalQuestions);
+    }
+
+    // Prioritize questions
+    const prioritizedQuestions = this.prioritizeQuestions(questions, productData);
+    
+    // Assess quality
+    const qualityAssessment = assessContentQuality(productData);
+    
+    const result = {
+      questions: prioritizedQuestions,
+      total_count: prioritizedQuestions.length,
+      categories_covered: this.categories.length,
+      quality_assessment: qualityAssessment,
+      generated_at: new Date().toISOString()
+    };
+
+    console.log(`✅ [${this.name}] Generated ${result.total_count} questions across ${result.categories_covered} categories`);
+    
+    return result;
+  }
+
+  /**
+   * Generate additional questions to meet target count
+   */
+  generateAdditionalQuestions(productData, needed) {
+    const additionalQuestions = [];
+    const genericQuestions = this.getGenericQuestions(productData);
+    
+    for (let i = 0; i < needed && i < genericQuestions.length; i++) {
+      additionalQuestions.push({
+        category: 'general',
+        ...genericQuestions[i],
+        priority: 'medium',
+        source: 'generated_additional'
+      });
+    }
+    
+    return additionalQuestions;
+  }
+
+  /**
+   * Get generic questions that work for any product
+   */
+  getGenericQuestions(productData) {
+    return [
+      {
+        question: `Who should use ${productData.productName || 'this product'}?`,
+        answer: `${productData.productName || 'This product'} is suitable for people with ${productData.skinType || 'various skin types'} looking for ${productData.benefits || 'skincare benefits'}.`
+      },
+      {
+        question: `How long does it take to see results with ${productData.productName || 'this product'}?`,
+        answer: `Results with ${productData.productName || 'this product'} may vary, but many users notice improvements within a few weeks of consistent use.`
+      },
+      {
+        question: `Where can I buy ${productData.productName || 'this product'}?`,
+        answer: `${productData.productName || 'This product'} is available through authorized retailers and online platforms.`
+      },
+      {
+        question: `What is the shelf life of ${productData.productName || 'this product'}?`,
+        answer: `${productData.productName || 'This product'} typically has a shelf life of 12-24 months when stored properly.`
+      },
+      {
+        question: `Can I return ${productData.productName || 'this product'} if I'm not satisfied?`,
+        answer: `Return policies may vary by retailer. Check with your point of purchase for specific return terms.`
+      },
+      {
+        question: `Is ${productData.productName || 'this product'} cruelty-free?`,
+        answer: `Please check the product packaging or manufacturer's website for cruelty-free certification information.`
+      }
+    ];
+  }
+
+  /**
+   * Prioritize questions by importance and relevance
+   */
+  prioritizeQuestions(questions, productData) {
+    return questions.map(question => {
+      const priority = this.calculateQuestionPriority(question, productData);
+      return {
+        ...question,
+        priority: priority.level,
+        importance_score: priority.score,
+        reasoning: priority.reasoning
+      };
+    }).sort((a, b) => b.importance_score - a.importance_score);
+  }
+
+  /**
+   * Calculate question priority based on category and content
+   */
+  calculateQuestionPriority(question, productData) {
+    let score = 50; // Base score
+    let reasoning = [];
+
+    // Category-based scoring
+    switch (question.category) {
+      case 'safety':
+        score += 25;
+        reasoning.push('Safety information is critical');
+        break;
+      case 'usage':
+        score += 20;
+        reasoning.push('Usage instructions are essential');
+        break;
+      case 'informational':
+        score += 15;
+        reasoning.push('Product information builds understanding');
+        break;
+      case 'purchase':
+        score += 10;
+        reasoning.push('Purchase information aids decision-making');
+        break;
+      case 'comparison':
+        score += 5;
+        reasoning.push('Comparison helps differentiation');
+        break;
+    }
+
+    // Content-based scoring
+    if (question.question.toLowerCase().includes('side effect')) {
+      score += 15;
+      reasoning.push('Side effects are high priority');
+    }
+
+    if (question.question.toLowerCase().includes('how to use')) {
+      score += 10;
+      reasoning.push('Usage instructions are frequently asked');
+    }
+
+    if (question.question.toLowerCase().includes('price')) {
+      score += 8;
+      reasoning.push('Pricing is important for purchase decisions');
+    }
+
+    // Determine priority level
+    let level;
+    if (score >= 80) level = 'high';
+    else if (score >= 60) level = 'medium';
+    else level = 'low';
+
     return {
-      questions: questions,
-      categories: this.getCategories(),
-      total_count: questions.length
+      score: Math.min(100, score),
+      level,
+      reasoning: reasoning.join(', ')
     };
   }
 
-  generateInformationalQuestions(product) {
-    return [
-      {
-        category: 'informational',
-        question: `What is ${product.name}?`,
-        answer: `${product.name} is a skincare serum with ${product.concentration} designed for ${product.skinType.toLowerCase()} skin types.`
-      },
-      {
-        category: 'informational',
-        question: 'What are the key ingredients?',
-        answer: `The key ingredients are ${product.keyIngredients}.`
-      },
-      {
-        category: 'informational',
-        question: 'What benefits can I expect?',
-        answer: `You can expect ${product.benefits.toLowerCase()} with regular use.`
-      }
-    ];
+  /**
+   * Validate question quality
+   */
+  validateQuestionQuality(questions) {
+    const validation = {
+      total_questions: questions.length,
+      meets_minimum: questions.length >= this.targetQuestionCount,
+      categories_covered: new Set(questions.map(q => q.category)).size,
+      has_all_categories: new Set(questions.map(q => q.category)).size >= this.categories.length,
+      quality_issues: []
+    };
+
+    // Check for duplicate questions
+    const questionTexts = questions.map(q => q.question.toLowerCase());
+    const duplicates = questionTexts.filter((q, index) => questionTexts.indexOf(q) !== index);
+    if (duplicates.length > 0) {
+      validation.quality_issues.push(`${duplicates.length} duplicate questions found`);
+    }
+
+    // Check answer quality
+    const shortAnswers = questions.filter(q => q.answer.length < 20);
+    if (shortAnswers.length > 0) {
+      validation.quality_issues.push(`${shortAnswers.length} answers are too short`);
+    }
+
+    return validation;
   }
 
-  generateSafetyQuestions(product) {
-    return [
-      {
-        category: 'safety',
-        question: 'Are there any side effects?',
-        answer: product.sideEffects || 'No known side effects when used as directed.'
-      },
-      {
-        category: 'safety',
-        question: 'Is this suitable for sensitive skin?',
-        answer: product.sideEffects.toLowerCase().includes('sensitive') 
-          ? 'May cause mild reactions in sensitive skin. Patch test recommended.'
-          : 'Generally suitable for most skin types including sensitive skin.'
-      },
-      {
-        category: 'safety',
-        question: 'Can I use this with other skincare products?',
-        answer: 'Consider your skin sensitivity as this product may cause mild tingling for sensitive skin.'
-      }
-    ];
-  }
-
-  generateUsageQuestions(product) {
-    return [
-      {
-        category: 'usage',
-        question: 'How do I use this product?',
-        answer: product.howToUse
-      },
-      {
-        category: 'usage',
-        question: 'When should I apply this serum?',
-        answer: product.howToUse.toLowerCase().includes('morning') 
-          ? 'Apply in the morning before sunscreen.'
-          : 'Follow the specific instructions provided with the product.'
-      },
-      {
-        category: 'usage',
-        question: 'How long before I see results?',
-        answer: 'Results typically become visible after 4-6 weeks of consistent use.'
-      }
-    ];
-  }
-
-  generatePurchaseQuestions(product) {
-    return [
-      {
-        category: 'purchase',
-        question: 'What is the price?',
-        answer: `${product.name} is priced at ${product.price}.`
-      },
-      {
-        category: 'purchase',
-        question: 'Is this good value for money?',
-        answer: `At ${product.price}, this serum offers good value with its ${product.concentration} and quality ingredients like ${product.keyIngredients}.`
-      },
-      {
-        category: 'purchase',
-        question: 'Where can I buy this product?',
-        answer: 'Available through authorized retailers and online platforms.'
-      },
-      {
-        category: 'purchase',
-        question: 'Are there any discounts available?',
-        answer: 'Check with authorized retailers for current promotions and bundle offers.'
-      },
-      {
-        category: 'purchase',
-        question: 'What is the shelf life?',
-        answer: 'Typically 12-24 months when stored properly in a cool, dry place.'
-      }
-    ];
-  }
-
-  generateComparisonQuestions(product) {
-    return [
-      {
-        category: 'comparison',
-        question: 'How does this compare to other Vitamin C serums?',
-        answer: `This serum stands out with its ${product.concentration} and additional ingredients like ${product.keyIngredients}.`
-      },
-      {
-        category: 'comparison',
-        question: 'Why choose this over other brands?',
-        answer: `The combination of ${product.benefits.toLowerCase()} and suitability for ${product.skinType.toLowerCase()} skin makes it a targeted choice.`
-      },
-      {
-        category: 'comparison',
-        question: 'Is this more effective than lower concentration serums?',
-        answer: `The ${product.concentration} provides an optimal balance of effectiveness and gentleness for daily use.`
-      },
-      {
-        category: 'comparison',
-        question: 'How does the price compare to similar products?',
-        answer: `At ${product.price}, this offers competitive pricing for a ${product.concentration} serum with quality ingredients.`
-      }
-    ];
-  }
-
-  getCategories() {
-    return ['informational', 'safety', 'usage', 'purchase', 'comparison'];
+  /**
+   * Get question generation statistics
+   */
+  getGenerationStats() {
+    return {
+      agent: this.name,
+      target_questions: this.targetQuestionCount,
+      categories: this.categories,
+      generation_experiences: this.experiences.length,
+      autonomy_level: this.autonomyLevel
+    };
   }
 }

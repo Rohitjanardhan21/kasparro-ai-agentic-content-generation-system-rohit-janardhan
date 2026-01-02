@@ -1,6 +1,7 @@
 {
   "generation_summary": {
-    "timestamp": "2025-12-27T08:22:46.395Z",
+    "timestamp": "2026-01-01T02:39:12.661Z",
+    "execution_time_ms": 14,
     "pages_generated": 5,
     "system_info": {
       "agents": [
@@ -37,11 +38,13 @@
         "Advanced content blocks"
       ]
     },
-    "performance_metrics": {
-      "total_questions": 18,
-      "content_utilization": 28,
-      "seo_score": 100,
-      "engagement_level": "high"
+    "assignment_compliance": {
+      "dataset_fields_used": 8,
+      "questions_generated": 18,
+      "categories_covered": 5,
+      "agents_executed": 8,
+      "templates_used": 3,
+      "content_blocks_used": 7
     }
   },
   "pages": {
@@ -51,11 +54,11 @@
         "safety",
         "usage"
       ],
-      "generated_at": "2025-12-27T08:22:46.360Z"
+      "generated_at": "2026-01-01T02:39:12.649Z"
     },
     "product": {
       "product_name": "GlowBoost Vitamin C Serum",
-      "generated_at": "2025-12-27T08:22:46.361Z",
+      "generated_at": "2026-01-01T02:39:12.650Z",
       "includes_specifications": true,
       "includes_usage_instructions": true,
       "includes_safety_info": true
@@ -68,13 +71,159 @@
         "benefits",
         "usage"
       ],
-      "generated_at": "2025-12-27T08:22:46.362Z"
-    },
-    "analytics": {
-      "generated_at": "2025-12-27T08:22:46.364Z"
-    },
-    "seo": {
-      "generated_at": "2025-12-27T08:22:46.366Z"
+      "generated_at": "2026-01-01T02:39:12.651Z"
     }
+  },
+  "orchestration_metrics": {
+    "startTime": 1767235152643,
+    "endTime": 1767235152657,
+    "totalTime": 14,
+    "agentCount": 8,
+    "successCount": 8,
+    "failureCount": 0,
+    "executionOrder": [
+      "DataParserAgent",
+      "QuestionGeneratorAgent",
+      "ComparisonDataAgent",
+      "FaqPageAgent",
+      "ProductPageAgent",
+      "ComparisonPageAgent",
+      "AnalyticsAgent",
+      "SeoOptimizationAgent"
+    ],
+    "agentStatuses": [
+      {
+        "name": "DataParserAgent",
+        "state": "completed",
+        "dependencies": [],
+        "executionTime": 2,
+        "executionCount": 1,
+        "lastError": null,
+        "ready": true,
+        "hasExecuted": true
+      },
+      {
+        "name": "QuestionGeneratorAgent",
+        "state": "completed",
+        "dependencies": [
+          "DataParserAgent"
+        ],
+        "executionTime": 0,
+        "executionCount": 1,
+        "lastError": null,
+        "ready": true,
+        "hasExecuted": true
+      },
+      {
+        "name": "ComparisonDataAgent",
+        "state": "completed",
+        "dependencies": [
+          "DataParserAgent"
+        ],
+        "executionTime": 0,
+        "executionCount": 1,
+        "lastError": null,
+        "ready": true,
+        "hasExecuted": true
+      },
+      {
+        "name": "FaqPageAgent",
+        "state": "completed",
+        "dependencies": [
+          "DataParserAgent",
+          "QuestionGeneratorAgent"
+        ],
+        "executionTime": 1,
+        "executionCount": 1,
+        "lastError": null,
+        "ready": true,
+        "hasExecuted": true
+      },
+      {
+        "name": "ProductPageAgent",
+        "state": "completed",
+        "dependencies": [
+          "DataParserAgent"
+        ],
+        "executionTime": 1,
+        "executionCount": 1,
+        "lastError": null,
+        "ready": true,
+        "hasExecuted": true
+      },
+      {
+        "name": "ComparisonPageAgent",
+        "state": "completed",
+        "dependencies": [
+          "DataParserAgent",
+          "ComparisonDataAgent"
+        ],
+        "executionTime": 1,
+        "executionCount": 1,
+        "lastError": null,
+        "ready": true,
+        "hasExecuted": true
+      },
+      {
+        "name": "AnalyticsAgent",
+        "state": "completed",
+        "dependencies": [
+          "QuestionGeneratorAgent",
+          "FaqPageAgent",
+          "ProductPageAgent",
+          "ComparisonPageAgent"
+        ],
+        "executionTime": 3,
+        "executionCount": 1,
+        "lastError": null,
+        "ready": true,
+        "hasExecuted": true
+      },
+      {
+        "name": "SeoOptimizationAgent",
+        "state": "completed",
+        "dependencies": [
+          "DataParserAgent",
+          "QuestionGeneratorAgent"
+        ],
+        "executionTime": 1,
+        "executionCount": 1,
+        "lastError": null,
+        "ready": true,
+        "hasExecuted": true
+      }
+    ],
+    "resultsCount": 8,
+    "dependencyGraph": {
+      "DataParserAgent": [],
+      "QuestionGeneratorAgent": [
+        "DataParserAgent"
+      ],
+      "ComparisonDataAgent": [
+        "DataParserAgent"
+      ],
+      "FaqPageAgent": [
+        "DataParserAgent",
+        "QuestionGeneratorAgent"
+      ],
+      "ProductPageAgent": [
+        "DataParserAgent"
+      ],
+      "ComparisonPageAgent": [
+        "DataParserAgent",
+        "ComparisonDataAgent"
+      ],
+      "AnalyticsAgent": [
+        "QuestionGeneratorAgent",
+        "FaqPageAgent",
+        "ProductPageAgent",
+        "ComparisonPageAgent"
+      ],
+      "SeoOptimizationAgent": [
+        "DataParserAgent",
+        "QuestionGeneratorAgent"
+      ]
+    },
+    "isComplete": true
   }
 }

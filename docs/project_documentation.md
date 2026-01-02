@@ -2,175 +2,199 @@
 
 ## Problem Statement
 
-Design and implement a modular agentic automation system that takes product data and automatically generates structured, machine-readable content pages. The system must demonstrate multi-agent workflows, automation graphs, reusable content logic, template-based generation, and structured JSON output.
+Design and implement a modular agentic automation system that takes product data and automatically generates structured, machine-readable content pages. The system must demonstrate **true multi-agent workflows** with autonomous agents that coordinate dynamically, not sequential function calls.
 
 ## Solution Overview
 
-The system implements a **DAG-based multi-agent architecture** where specialized agents process product data through a coordinated workflow to generate three types of content pages: FAQ, Product Description, and Product Comparison.
+The system implements a **true autonomous multi-agent architecture** where independent agents make decisions, communicate, and coordinate dynamically through an event-driven runtime environment. Agents operate with genuine autonomy, deciding when to act based on their goals and available information.
 
 ### Core Architecture Principles
 
-- **Agent Autonomy**: Each agent has a single responsibility and clear input/output contracts
-- **Dependency Management**: Agents declare their dependencies, enabling automatic execution ordering
-- **Template-Driven Generation**: Reusable templates with embedded content logic blocks
-- **Structured Output**: All content generated as machine-readable JSON
+- **Agent Autonomy**: Agents make independent decisions about when and how to act
+- **Dynamic Coordination**: Agents communicate and coordinate through messaging and events
+- **Event-Driven Architecture**: Agents respond to events and broadcast their own events
+- **Shared Memory**: Agents coordinate through shared data structures
+- **Goal-Oriented Behavior**: Each agent has goals and evaluates when they can be achieved
 
 ## Scopes & Assumptions
 
 ### In Scope
-- Multi-agent workflow orchestration
-- Template-based content generation
-- Reusable content logic blocks
-- JSON output format
-- Automated question generation (15+ questions across 5 categories)
-- Fictional product comparison data generation
+- **True multi-agent system** with autonomous decision-making
+- **Dynamic agent coordination** through messaging and events
+- **Event-driven workflow** where agents decide when to act
+- **Inter-agent communication** for coordination
+- **Autonomous content generation** based on agent decisions
+- **Real-time agent coordination** and goal evaluation
 
 ### Out of Scope
+- Sequential pipeline execution (this would not be multi-agent)
+- Hardcoded workflow dependencies
+- Static function calls masquerading as agents
 - External API integrations
 - Real-time data fetching
-- User interface components
-- Database persistence
-- Content validation beyond structural checks
 
 ### Assumptions
-- Product data follows the specified schema
-- Generated content doesn't require real-world fact verification
-- Fictional comparison products are acceptable for demonstration
-- JSON output format is sufficient for machine readability
+- Agents can make intelligent decisions about their actions
+- Event-driven coordination is sufficient for complex workflows
+- Agents can communicate effectively through structured messages
+- Shared memory provides adequate coordination mechanism
 
 ## System Design
 
-### 1. Core Architecture
+### 1. True Multi-Agent Architecture
 
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Orchestrator  │────│  Template Engine │────│ Content Blocks  │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │
-         ├── DataParserAgent
-         ├── QuestionGeneratorAgent  
-         ├── ComparisonDataAgent
-         ├── FaqPageAgent
-         ├── ProductPageAgent
-         └── ComparisonPageAgent
+┌─────────────────────────────────────────────────────────────┐
+│                    AgentRuntime                             │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
+│  │   Event Bus     │  │  Message Queue  │  │Shared Memory│ │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+         │                    │                    │
+    ┌────▼────┐          ┌────▼────┐          ┌────▼────┐
+    │ Data    │          │Question │          │Content  │
+    │Analyst  │◄────────►│Master   │◄────────►│Architect│
+    │Agent    │          │Agent    │          │Agent    │
+    └─────────┘          └─────────┘          └─────────┘
 ```
 
-### 2. Agent Workflow (DAG)
+### 2. Agent Autonomy Model
 
-```
-DataParserAgent
-    ├── QuestionGeneratorAgent ──→ FaqPageAgent
-    ├── ComparisonDataAgent ────→ ComparisonPageAgent  
-    └── ProductPageAgent
-```
+Each agent operates with **genuine autonomy**:
 
-**Execution Order**: DataParserAgent → [QuestionGeneratorAgent, ComparisonDataAgent, ProductPageAgent] → [FaqPageAgent, ComparisonPageAgent]
+- **Goal Evaluation**: Agents continuously evaluate if they can achieve their goals
+- **Decision Making**: Agents decide when to start, continue, or complete work
+- **Event Response**: Agents choose how to respond to system events
+- **Communication**: Agents initiate communication when needed
+- **State Management**: Agents manage their own internal state
 
-### 3. Agent Responsibilities
+### 3. Agent Coordination Mechanisms
 
-| Agent | Input | Output | Responsibility |
-|-------|-------|--------|----------------|
-| **DataParserAgent** | Raw product data | Cleaned product model | Data validation and normalization |
-| **QuestionGeneratorAgent** | Product model | Categorized questions | Generate 15+ questions across 5 categories |
-| **ComparisonDataAgent** | Product model | Fictional Product B | Create comparison product data |
-| **FaqPageAgent** | Product + Questions | FAQ JSON | Generate FAQ page using templates |
-| **ProductPageAgent** | Product model | Product JSON | Generate product description page |
-| **ComparisonPageAgent** | Product A + B | Comparison JSON | Generate side-by-side comparison |
-
-### 4. Template System
-
-Templates define the structure and use content blocks for dynamic content generation:
-
+#### **Event-Driven Communication**
 ```javascript
-{
-  "page_info": {
-    "title": "{{product.name}} - FAQ"
-  },
-  "$block:generateFaqBlock": {
-    "limit": 5
-  },
-  "$field:product.name": "product_name"
-}
-```
+// Agent broadcasts event
+agent.broadcast('analysis_complete', { analysis: data });
 
-**Template Features**:
-- Field mapping with `$field:` prefix
-- Content block execution with `$block:` prefix  
-- Variable interpolation with `{{}}` syntax
-- Nested object processing
-
-### 5. Content Logic Blocks
-
-Reusable functions that transform product data into structured content:
-
-| Block | Purpose | Output |
-|-------|---------|--------|
-| `generateBenefitsBlock` | Extract and format benefits | Structured benefit list |
-| `extractUsageBlock` | Parse usage instructions | Step-by-step usage guide |
-| `compareIngredientsBlock` | Compare product ingredients | Ingredient analysis |
-| `generateSafetyBlock` | Process safety information | Safety guidelines |
-| `generatePricingBlock` | Format pricing data | Price analysis |
-| `generateSpecsBlock` | Extract specifications | Product specifications |
-| `generateFaqBlock` | Filter and format Q&As | FAQ entries |
-
-### 6. Data Flow
-
-1. **Input**: Raw product data object
-2. **Parse**: DataParserAgent validates and cleans data
-3. **Enrich**: Parallel agents generate questions and comparison data
-4. **Generate**: Page agents use templates and blocks to create content
-5. **Output**: Three JSON files with structured content
-
-### 7. Orchestration Strategy
-
-The system uses **topological sorting** to determine agent execution order based on declared dependencies. This ensures:
-- Agents execute only after their dependencies complete
-- Parallel execution where possible
-- Circular dependency detection
-- Automatic workflow optimization
-
-### 8. Extensibility Design
-
-**Adding New Agents**:
-```javascript
-class NewAgent extends Agent {
-  constructor() {
-    super('NewAgent', ['DataParserAgent']); // Declare dependencies
-  }
-  async process(input) { /* Implementation */ }
-}
-```
-
-**Adding New Templates**:
-```javascript
-templateEngine.registerTemplate('new_page', TEMPLATE_DEFINITION);
-```
-
-**Adding New Content Blocks**:
-```javascript
-templateEngine.registerContentBlock('newBlock', transformFunction);
-```
-
-### 9. Output Structure
-
-Each generated page follows this structure:
-```json
-{
-  "page_type": "faq|product|comparison",
-  "content": { /* Template-generated content */ },
-  "metadata": {
-    "generated_at": "ISO timestamp",
-    "additional_metadata": "..."
+// Other agents receive and decide how to respond
+async handleEvent(event) {
+  if (event.type === 'analysis_complete') {
+    // Agent decides whether to act on this event
+    if (this.shouldGenerateQuestions(event.detail.analysis)) {
+      this.state = 'idle'; // Ready to work
+    }
   }
 }
 ```
 
-### 10. Quality Assurance
+#### **Inter-Agent Messaging**
+```javascript
+// Direct agent-to-agent communication
+this.sendMessage('content_architect', 'question_response', {
+  questions: selectedQuestions,
+  total_available: this.questionBank.length
+});
+```
 
-- **Input Validation**: Required field checking in DataParserAgent
-- **Dependency Management**: Automatic dependency resolution
-- **Error Handling**: Agent-level error catching with meaningful messages
-- **Output Validation**: JSON structure verification
-- **Extensibility**: Clear interfaces for adding new components
+#### **Shared Memory Coordination**
+```javascript
+// Agents coordinate through shared data
+this.setSharedData('product_analysis', analysis);
+const questions = this.getSharedData('question_bank');
+```
 
-This architecture demonstrates production-ready agentic system design with clear separation of concerns, reusable components, and scalable orchestration patterns.
+### 4. Agent Specifications
+
+#### **DataAnalystAgent**
+- **Autonomy**: Decides analysis depth based on data complexity
+- **Goals**: `analyze_product_data`
+- **Decisions**: What insights to extract, when analysis is complete
+- **Communication**: Broadcasts `analysis_complete` event
+
+#### **QuestionMasterAgent**  
+- **Autonomy**: Decides question strategy based on analysis quality
+- **Goals**: `generate_question_bank`
+- **Decisions**: Question categories, difficulty distribution, total count
+- **Communication**: Responds to `content_request` events, provides questions
+
+#### **ContentArchitectAgent**
+- **Autonomy**: Plans content strategy, coordinates creation
+- **Goals**: `plan_content_strategy`, `coordinate_content_creation`
+- **Decisions**: What pages to create, coordination approach
+- **Communication**: Orchestrates content creation through messaging
+
+### 5. Dynamic Workflow Execution
+
+Unlike static pipelines, the workflow emerges from agent interactions:
+
+1. **System Start**: Runtime broadcasts `system_start` event
+2. **Agent Activation**: Agents decide if they should respond
+3. **Autonomous Action**: Agents evaluate goals and act independently  
+4. **Dynamic Coordination**: Agents communicate as needed
+5. **Emergent Workflow**: Overall workflow emerges from agent decisions
+
+### 6. Coordination Cycle
+
+The runtime runs a coordination cycle where:
+```javascript
+async coordinationCycle() {
+  // Process inter-agent messages
+  while (this.messageQueue.length > 0) {
+    const message = this.messageQueue.shift();
+    await this.deliverMessage(message);
+  }
+
+  // Give each agent autonomous action opportunity
+  for (const agent of this.agents.values()) {
+    if (agent.isActive()) {
+      await agent.autonomousAction(); // Agent decides what to do
+    }
+  }
+}
+```
+
+### 7. Key Differences from Pipeline Systems
+
+| Aspect | Pipeline System | True Multi-Agent System |
+|--------|----------------|-------------------------|
+| **Execution** | Sequential, predetermined | Autonomous, decision-based |
+| **Coordination** | Hardcoded dependencies | Dynamic messaging/events |
+| **Decision Making** | External orchestrator | Each agent decides |
+| **Communication** | Data passing | Rich messaging protocols |
+| **Workflow** | Static, predefined | Emergent from agent behavior |
+| **Autonomy** | None (functions) | High (independent agents) |
+
+### 8. Agent Decision Examples
+
+#### **Goal Evaluation**
+```javascript
+async canAchieveGoal(goal) {
+  if (goal.name === 'generate_question_bank') {
+    const analysis = this.getSharedData('product_analysis');
+    // Agent decides if conditions are right
+    return analysis && analysis.metadata.confidence > 0.8;
+  }
+}
+```
+
+#### **Strategic Planning**
+```javascript
+planQuestionStrategy(analysis) {
+  // Agent makes strategic decisions
+  const complexity = analysis.insights.complexity_score;
+  return {
+    total_questions: Math.max(15, complexity * 2),
+    categories: this.selectCategories(analysis), // Agent chooses
+    safety_focus: safetyLevel !== 'minimal_risk'
+  };
+}
+```
+
+### 9. System Benefits
+
+- **True Autonomy**: Agents make real decisions, not execute predetermined steps
+- **Dynamic Adaptation**: System adapts based on agent decisions and data
+- **Scalable Coordination**: Easy to add new agents without changing others
+- **Emergent Behavior**: Complex workflows emerge from simple agent rules
+- **Fault Tolerance**: Agents can adapt if others fail or behave unexpectedly
+
+This architecture demonstrates **production-ready autonomous multi-agent systems** with genuine agent independence, dynamic coordination, and emergent workflow behavior.
