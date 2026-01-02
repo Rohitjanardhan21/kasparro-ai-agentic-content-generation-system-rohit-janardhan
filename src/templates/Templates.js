@@ -1,130 +1,166 @@
 /**
- * Template Definitions - FAQ, Product, and Comparison page templates
+ * Templates - Defines reusable templates for content generation
  * 
- * Templates use:
- * - $field:fieldName for direct data mapping
- * - $block:blockName for content block execution
- * - {{variable}} for variable interpolation
+ * Each template includes:
+ * 1. Structure definition
+ * 2. Field mappings
+ * 3. Content block configurations
+ * 4. Variable interpolation rules
  */
 
-export const FAQ_PAGE_TEMPLATE = {
-  title: "Frequently Asked Questions - {{productName}}",
-  description: "Common questions and answers about {{productName}}",
-  categories: [
-    "informational",
-    "safety", 
-    "usage",
-    "purchase",
-    "comparison"
-  ],
-  questions: "$block:generateQuestions",
-  metadata: {
-    generated_at: "$field:timestamp",
-    product_name: "$field:productName",
-    total_questions: "$block:countQuestions",
-    content_quality: "$block:assessContentQuality"
+export const FAQ_TEMPLATE = {
+  name: 'faq_page',
+  description: 'FAQ page template with categorized questions',
+  structure: {
+    title: 'Frequently Asked Questions - {{productName}}',
+    description: 'Common questions and answers about {{productName}}',
+    metadata: {
+      generatedAt: new Date().toISOString(),
+      templateVersion: '1.0'
+    },
+    questions: {
+      type: 'block',
+      block: 'generateFaqQuestions',
+      params: {
+        minQuestions: 15,
+        categories: ['informational', 'safety', 'usage', 'purchase', 'comparison']
+      }
+    },
+    summary: {
+      type: 'block',
+      block: 'generateFaqSummary'
+    }
+  },
+  fieldMappings: {
+    productName: 'productName',
+    productPrice: 'price',
+    keyIngredients: 'keyIngredients'
+  },
+  contentBlocks: {
+    categories: 'extractQuestionCategories',
+    totalQuestions: 'countQuestions'
   }
 };
 
 export const PRODUCT_PAGE_TEMPLATE = {
-  title: "$field:productName",
-  subtitle: "{{concentration}} skincare solution for {{skinType}}",
-  sections: {
-    overview: {
-      title: "Product Overview",
-      content: "$block:generateOverview"
+  name: 'product_page',
+  description: 'Comprehensive product page template',
+  structure: {
+    title: '{{productName}} - Product Information',
+    productOverview: {
+      type: 'block',
+      block: 'generateProductOverview'
     },
-    benefits: {
-      title: "Key Benefits", 
-      content: "$block:generateBenefits"
+    sections: {
+      benefits: {
+        type: 'block',
+        block: 'generateBenefitsSection'
+      },
+      usage: {
+        type: 'block',
+        block: 'generateUsageSection'
+      },
+      ingredients: {
+        type: 'block',
+        block: 'generateIngredientsSection'
+      },
+      safety: {
+        type: 'block',
+        block: 'generateSafetySection'
+      },
+      pricing: {
+        type: 'block',
+        block: 'generatePricingSection'
+      }
     },
-    ingredients: {
-      title: "Active Ingredients",
-      content: "$block:generateIngredients"
-    },
-    usage: {
-      title: "How to Use",
-      content: "$block:generateUsage"
-    },
-    safety: {
-      title: "Safety Information",
-      content: "$block:generateSafety"
+    metadata: {
+      generatedAt: new Date().toISOString(),
+      templateVersion: '1.0'
     }
   },
-  specifications: "$block:generateSpecs",
-  pricing: {
-    price: "$field:price",
-    analysis: "$block:generatePricing"
+  fieldMappings: {
+    productName: 'productName',
+    concentration: 'concentration',
+    skinType: 'skinType',
+    price: 'price'
   },
-  metadata: {
-    generated_at: "$field:timestamp",
-    skin_type: "$field:skinType",
-    concentration: "$field:concentration"
+  contentBlocks: {
+    specifications: 'generateProductSpecs',
+    recommendations: 'generateRecommendations'
   }
 };
 
 export const COMPARISON_PAGE_TEMPLATE = {
-  title: "Product Comparison - {{productName}}",
-  subtitle: "Compare {{productName}} with similar products",
-  comparison: {
-    product_a: {
-      name: "$field:productName",
-      details: "$block:generateProductDetails"
+  name: 'comparison_page',
+  description: 'Product comparison template',
+  structure: {
+    title: 'Product Comparison - {{productName}} vs Competitors',
+    comparisonOverview: {
+      type: 'block',
+      block: 'generateComparisonOverview'
     },
-    product_b: {
-      name: "$block:generateCompetitorName",
-      details: "$block:generateCompetitorDetails"
+    products: {
+      primary: {
+        type: 'block',
+        block: 'formatPrimaryProduct'
+      },
+      competitors: {
+        type: 'block',
+        block: 'generateCompetitorProducts',
+        params: {
+          count: 2
+        }
+      }
     },
-    analysis: "$block:generateComparisonAnalysis"
-  },
-  sections: {
-    ingredients: {
-      title: "Ingredient Comparison",
-      content: "$block:compareIngredients"
+    comparison: {
+      type: 'block',
+      block: 'generateDetailedComparison',
+      params: {
+        comparisonPoints: ['price', 'ingredients', 'benefits', 'usage', 'suitability']
+      }
     },
-    benefits: {
-      title: "Benefits Analysis", 
-      content: "$block:compareBenefits"
+    analysis: {
+      type: 'block',
+      block: 'generateComparisonAnalysis'
     },
-    pricing: {
-      title: "Value Comparison",
-      content: "$block:comparePricing"
-    },
-    usage: {
-      title: "Usage Comparison",
-      content: "$block:compareUsage"
-    },
-    safety: {
-      title: "Safety Profile",
-      content: "$block:compareSafety"
+    metadata: {
+      generatedAt: new Date().toISOString(),
+      templateVersion: '1.0'
     }
   },
-  recommendation: "$block:generateRecommendation",
-  metadata: {
-    generated_at: "$field:timestamp",
-    comparison_type: "product_vs_competitor"
+  fieldMappings: {
+    productName: 'productName',
+    basePrice: 'price',
+    targetSkinType: 'skinType'
+  },
+  contentBlocks: {
+    summary: 'generateComparisonSummary',
+    recommendations: 'generateComparisonRecommendations'
   }
 };
-
-/**
- * Template registry for easy access
- */
-export const TEMPLATES = {
-  faq: FAQ_PAGE_TEMPLATE,
-  product_page: PRODUCT_PAGE_TEMPLATE,
-  comparison_page: COMPARISON_PAGE_TEMPLATE
-};
-
-/**
- * Get template by name
- */
-export function getTemplate(name) {
-  return TEMPLATES[name];
-}
 
 /**
  * Get all available templates
  */
 export function getAllTemplates() {
-  return TEMPLATES;
+  return {
+    faq_page: FAQ_TEMPLATE,
+    product_page: PRODUCT_PAGE_TEMPLATE,
+    comparison_page: COMPARISON_PAGE_TEMPLATE
+  };
+}
+
+/**
+ * Get template by name
+ */
+export function getTemplate(name) {
+  const templates = getAllTemplates();
+  return templates[name];
+}
+
+/**
+ * Get template names
+ */
+export function getTemplateNames() {
+  return Object.keys(getAllTemplates());
 }

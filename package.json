@@ -1,14 +1,17 @@
 {
   "name": "kasparro-ai-agentic-content-generation-system-rohit-janardhan",
-  "version": "2.0.0",
-  "description": "Multi-agent content generation system for product data - Kasparro Challenge Submission",
+  "version": "4.0.0",
+  "description": "8-Agent Multi-Agent Content Generation System - Kasparro Challenge Submission",
   "main": "src/index.js",
   "scripts": {
     "generate": "node src/index.js",
-    "test": "node src/test.js"
+    "test": "node src/test-8-agent-system.js",
+    "start": "node src/index.js",
+    "multiagent": "node src/index.js",
+    "8-agent": "node src/test-8-agent-system.js"
   },
   "type": "module",
-  "keywords": ["ai", "agents", "content-generation", "automation", "kasparro", "multi-agent"],
+  "keywords": ["ai", "agents", "content-generation", "automation", "kasparro", "multi-agent", "8-agent", "autonomous"],
   "author": "Rohit Janardhan",
   "license": "MIT",
   "repository": {

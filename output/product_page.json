@@ -1,218 +1,165 @@
 {
-  "title": "GlowBoost Vitamin C Serum",
-  "subtitle": "10% Vitamin C skincare solution for Oily, Combination",
+  "title": "Vitamin C Brightening Serum - Product Information",
+  "productOverview": {
+    "name": "Vitamin C Brightening Serum",
+    "description": "Vitamin C Brightening Serum is a 20% Vitamin C skincare solution featuring Vitamin C, Hyaluronic Acid, Niacinamide, Vitamin E. Designed for All skin types, especially dull and uneven skin, it delivers Brightening, Anti-aging, Hydration, Dark spot reduction.",
+    "keyFeatures": [
+      "20% Vitamin C active ingredient",
+      "Suitable for All skin types, especially dull and uneven skin skin",
+      "Provides Brightening, Anti-aging, Hydration, Dark spot reduction",
+      "Contains Vitamin C, Hyaluronic Acid, Niacinamide, Vitamin E"
+    ],
+    "category": "Skincare",
+    "type": "Serum"
+  },
   "sections": {
-    "overview": {
-      "title": "Product Overview",
-      "content": {
-        "description": "GlowBoost Vitamin C Serum is a 10% Vitamin C skincare solution specifically formulated for Oily, Combination.",
-        "key_features": [
-          "10% Vitamin C",
-          "Vitamin C, Hyaluronic Acid",
-          "Designed for Oily, Combination",
-          "Brightening, Fades dark spots"
-        ],
-        "target_audience": "Individuals with Oily, Combination seeking Brightening, Fades dark spots"
-      }
-    },
     "benefits": {
       "title": "Key Benefits",
-      "content": {
-        "primary_benefits": [
-          "Brightening",
-          "Fades dark spots"
-        ],
-        "detailed_analysis": [
-          {
-            "benefit": "Brightening",
-            "description": "GlowBoost Vitamin C Serum delivers brightening through its Vitamin C, Hyaluronic Acid.",
-            "timeline": "2-4 weeks for visible improvement",
-            "evidence_level": "clinical studies",
-            "user_rating": {
-              "score": "4.3",
-              "total_reviews": 220,
-              "satisfaction_rate": "91%"
-            }
-          },
-          {
-            "benefit": "Fades dark spots",
-            "description": "GlowBoost Vitamin C Serum delivers fades dark spots through its Vitamin C, Hyaluronic Acid.",
-            "timeline": "2-4 weeks with consistent use",
-            "evidence_level": "ingredient research",
-            "user_rating": {
-              "score": "4.8",
-              "total_reviews": 511,
-              "satisfaction_rate": "88%"
-            }
-          }
-        ],
-        "synergy": "The combination of Vitamin C, Hyaluronic Acid works synergistically to enhance Brightening, Fades dark spots."
-      }
-    },
-    "ingredients": {
-      "title": "Active Ingredients",
-      "content": {
-        "active_ingredients": [
-          "Vitamin C",
-          "Hyaluronic Acid"
-        ],
-        "concentration": "10% Vitamin C",
-        "ingredient_profiles": [
-          {
-            "name": "Vitamin C",
-            "function": "Antioxidant and brightening agent",
-            "benefits": "brightening, antioxidant protection"
-          },
-          {
-            "name": "Hyaluronic Acid",
-            "function": "Hydration and moisture retention",
-            "benefits": "hydration, plumping"
-          }
-        ],
-        "formulation_notes": "This 10% Vitamin C formulation is optimized for Oily, Combination.",
-        "synergy_analysis": {
-          "identified_synergies": [
-            {
-              "combination": "Vitamin C + Hyaluronic Acid",
-              "effect": "Enhanced absorption and hydration",
-              "synergy_score": 85
-            }
-          ],
-          "overall_compatibility": "excellent",
-          "formulation_stability": "stable under normal conditions"
+      "primaryBenefits": [
+        "Brightening",
+        "Anti-aging",
+        "Hydration",
+        "Dark spot reduction"
+      ],
+      "detailedBenefits": [
+        {
+          "benefit": "Brightening",
+          "description": "Experience brightening with regular use",
+          "timeline": "Results may be visible within 2-4 weeks",
+          "intensity": "Moderate to significant improvement"
+        },
+        {
+          "benefit": "Anti-aging",
+          "description": "Experience anti-aging with regular use",
+          "timeline": "Results may be visible within 2-4 weeks",
+          "intensity": "Moderate to significant improvement"
+        },
+        {
+          "benefit": "Hydration",
+          "description": "Experience hydration with regular use",
+          "timeline": "Results may be visible within 2-4 weeks",
+          "intensity": "Moderate to significant improvement"
+        },
+        {
+          "benefit": "Dark spot reduction",
+          "description": "Experience dark spot reduction with regular use",
+          "timeline": "Results may be visible within 2-4 weeks",
+          "intensity": "Moderate to significant improvement"
         }
-      }
+      ],
+      "overallValue": "Vitamin C Brightening Serum provides comprehensive skincare benefits for All skin types, especially dull and uneven skin"
     },
     "usage": {
       "title": "How to Use",
-      "content": {
-        "instructions": "Apply 2–3 drops in the morning before sunscreen",
-        "frequency": "Daily (morning)",
-        "application_tips": [
-          {
-            "instruction": "Cleanse skin before application",
-            "importance": "critical",
-            "difficulty": "easy"
-          },
-          {
-            "instruction": "Apply 2–3 drops in the morning before sunscreen",
-            "importance": "essential",
-            "difficulty": "easy"
-          },
-          {
-            "instruction": "Always follow with sunscreen during the day",
-            "importance": "essential",
-            "difficulty": "easy"
-          }
-        ],
-        "precautions": [
-          "May cause mild tingling for sensitive skin",
-          "Patch test recommended"
-        ]
-      }
+      "instructions": [
+        "Apply 3-4 drops to clean face in the morning. Follow with sunscreen."
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "instruction": "Apply 3-4 drops to clean face in the morning. Follow with sunscreen.",
+          "importance": "high",
+          "duration": "As directed"
+        }
+      ],
+      "frequency": "Daily use recommended",
+      "precautions": [
+        "May cause mild irritation in sensitive individuals"
+      ]
+    },
+    "ingredients": {
+      "title": "Key Ingredients",
+      "activeIngredients": [
+        "Vitamin C",
+        "Hyaluronic Acid",
+        "Niacinamide",
+        "Vitamin E"
+      ],
+      "ingredientDetails": [
+        {
+          "name": "Vitamin C",
+          "purpose": "Skincare benefit",
+          "concentration": "20% Vitamin C",
+          "safety": "Generally well-tolerated"
+        },
+        {
+          "name": "Hyaluronic Acid",
+          "purpose": "Skincare benefit",
+          "concentration": "Effective level",
+          "safety": "Generally well-tolerated"
+        },
+        {
+          "name": "Niacinamide",
+          "purpose": "Skincare benefit",
+          "concentration": "Effective level",
+          "safety": "Generally well-tolerated"
+        },
+        {
+          "name": "Vitamin E",
+          "purpose": "Skincare benefit",
+          "concentration": "Effective level",
+          "safety": "Generally well-tolerated"
+        }
+      ],
+      "formulation": "Carefully balanced formula with 4 key ingredients"
     },
     "safety": {
       "title": "Safety Information",
-      "content": {
-        "side_effects": "Mild tingling for sensitive skin",
-        "precautions": [
-          "Patch test before first use",
-          "Use sunscreen during the day",
-          "Discontinue if irritation occurs"
+      "sideEffects": [
+        "May cause mild irritation in sensitive individuals"
+      ],
+      "precautions": [
+        "Patch test before first use",
+        "Avoid contact with eyes",
+        "Discontinue use if irritation occurs"
+      ],
+      "suitability": {
+        "skinTypes": [
+          "All skin types, especially dull and uneven skin"
         ],
-        "contraindications": [
-          "Avoid if sensitive to ingredients that may cause mild tingling for sensitive skin"
+        "ageGroups": [
+          "Adults"
         ],
-        "storage": "Store in a cool, dry place away from direct sunlight"
-      }
-    }
-  },
-  "specifications": {
-    "product_name": "GlowBoost Vitamin C Serum",
-    "concentration": "10% Vitamin C",
-    "skin_type": "Oily, Combination",
-    "key_ingredients": "Vitamin C, Hyaluronic Acid",
-    "benefits": "Brightening, Fades dark spots",
-    "usage": "Apply 2–3 drops in the morning before sunscreen",
-    "side_effects": "Mild tingling for sensitive skin",
-    "price": "₹699",
-    "formulation_type": "Serum",
-    "texture": "Lightweight liquid",
-    "absorption": "Fast-absorbing",
-    "storage_requirements": [
-      "Store in a cool, dry place",
-      "Keep away from direct sunlight",
-      "Temperature: 15-25°C (59-77°F)",
-      "Avoid extreme temperatures",
-      "Protect from light to maintain potency",
-      "Refrigeration may extend shelf life"
-    ],
-    "shelf_life": {
-      "unopened": "18 months unopened",
-      "opened": "6-9 months after opening",
-      "factors": [
-        "Storage conditions affect longevity",
-        "Check for changes in color, texture, or smell",
-        "Use within recommended timeframe for best results"
+        "conditions": [
+          "Normal skin conditions"
+        ]
+      },
+      "warnings": [
+        "May cause may cause mild irritation in sensitive individuals"
       ]
     },
-    "packaging_info": {
-      "container_type": "Dark glass bottle with dropper",
-      "size_options": [
-        "15ml",
-        "30ml",
-        "50ml"
-      ],
-      "packaging_features": [
-        "UV-protective glass",
-        "Precision dropper for accurate dosing",
-        "Tamper-evident seal",
-        "Recyclable materials"
-      ],
-      "sustainability": {
-        "recyclable": true,
-        "eco_friendly_materials": "Glass and minimal plastic components",
-        "carbon_footprint": "Optimized packaging design"
+    "pricing": {
+      "title": "Pricing",
+      "currentPrice": "₹899",
+      "priceCategory": "Standard",
+      "valueProposition": "Vitamin C Brightening Serum offers excellent value with Brightening, Anti-aging, Hydration, Dark spot reduction at ₹899",
+      "costEffectiveness": "Competitive pricing for Vitamin C, Hyaluronic Acid, Niacinamide, Vitamin E",
+      "budgetAnalysis": {
+        "category": "Standard",
+        "comparison": "Competitive with similar products",
+        "recommendation": "Good value for money"
       }
-    }
-  },
-  "pricing": {
-    "price": "₹699",
-    "analysis": {
-      "current_price": "₹699",
-      "value_proposition": "GlowBoost Vitamin C Serum offers Brightening, Fades dark spots with Vitamin C, Hyaluronic Acid at ₹699.",
-      "market_position": "Mid-range",
-      "cost_per_benefit": "Approximately 350 per benefit",
-      "investment_justification": "The 10% Vitamin C and Vitamin C, Hyaluronic Acid justify the investment for Oily, Combination."
     }
   },
   "metadata": {
-    "generated_at": "2026-01-02T10:45:08.399Z",
-    "skin_type": "Oily, Combination",
-    "concentration": "10% Vitamin C"
+    "generatedAt": "2026-01-02T15:34:42.590Z",
+    "templateVersion": "1.0"
   },
-  "generation_info": {
-    "agent": "ProductPageAgent",
-    "template_used": "PRODUCT_PAGE_TEMPLATE",
-    "processing_time": 1767350708400,
-    "autonomy_level": 0.8
+  "productName": "Vitamin C Brightening Serum",
+  "concentration": "20% Vitamin C",
+  "skinType": "All skin types, especially dull and uneven skin",
+  "price": "₹899",
+  "specifications": {
+    "productType": "Serum",
+    "volume": "Standard size",
+    "concentration": "20% Vitamin C",
+    "skinCompatibility": "All skin types, especially dull and uneven skin",
+    "applicationMethod": "Topical",
+    "storageRequirements": "Store in cool, dry place"
   },
-  "validation": {
-    "valid": true,
-    "issues": [
-      "Content lacks sufficient detail"
-    ],
-    "quality_score": 85,
-    "completeness": {
-      "section_depths": {
-        "overview": 47.35,
-        "benefits": 69.2,
-        "ingredients": 63.55,
-        "usage": 55.75,
-        "safety": 46.7
-      },
-      "average_depth": 57,
-      "total_sections": 5
-    }
-  }
+  "recommendations": [
+    "Ideal for All skin types, especially dull and uneven skin",
+    "Best used in morning routine",
+    "Combine with sunscreen for optimal results"
+  ]
 }

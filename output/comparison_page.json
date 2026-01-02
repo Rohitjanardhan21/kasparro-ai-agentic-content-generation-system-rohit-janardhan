@@ -1,297 +1,110 @@
 {
-  "title": "Product Comparison - GlowBoost Vitamin C Serum",
-  "subtitle": "Compare GlowBoost Vitamin C Serum with similar products",
-  "comparison": {
-    "product_a": {
-      "name": "GlowBoost Vitamin C Serum",
-      "details": {
-        "name": "GlowBoost Vitamin C Serum",
-        "concentration": "10% Vitamin C",
-        "ingredients": "Vitamin C, Hyaluronic Acid",
-        "benefits": "Brightening, Fades dark spots",
-        "skin_type": "Oily, Combination",
-        "price": "₹699",
-        "usage": "Apply 2–3 drops in the morning before sunscreen",
-        "side_effects": "Mild tingling for sensitive skin"
-      }
-    },
-    "product_b": {
-      "name": "VitaGlow Advanced Serum",
-      "details": {
-        "name": "SkinBoost Active Concentrate",
-        "concentration": "12% Vitamin C",
-        "ingredients": "Vitamin C, Niacinamide, Peptides",
-        "benefits": "Anti-aging, Brightening, Hydration",
-        "skin_type": "All skin types",
-        "price": "₹762",
-        "usage": "Apply 2-3 drops twice daily",
-        "side_effects": "Possible mild irritation"
-      }
-    },
-    "analysis": {
-      "summary": "GlowBoost Vitamin C Serum vs RadiantCare Vitamin Serum",
-      "key_differences": [
-        "Concentration: 10% Vitamin C vs 12% Vitamin C",
-        "Price: ₹699 vs ₹885",
-        "Target: Oily, Combination vs All skin types"
-      ],
-      "advantages": [
-        "GlowBoost Vitamin C Serum is specifically formulated for Oily, Combination",
-        "Contains Vitamin C, Hyaluronic Acid for targeted benefits",
-        "Offers Brightening, Fades dark spots at competitive pricing"
-      ],
-      "recommendation": "Choose GlowBoost Vitamin C Serum if you have Oily, Combination and are looking for Brightening, Fades dark spots."
-    }
+  "title": "Product Comparison - Vitamin C Brightening Serum vs Competitors",
+  "comparisonOverview": {
+    "title": "Vitamin C Brightening Serum Comparison",
+    "purpose": "Compare key features and benefits with similar products",
+    "methodology": "Side-by-side analysis of important product attributes",
+    "scope": "Price, ingredients, benefits, usage, and suitability comparison"
   },
-  "sections": {
-    "ingredients": {
-      "title": "Ingredient Comparison",
-      "content": {
-        "product_a_ingredients": [
-          "Vitamin C",
-          "Hyaluronic Acid"
-        ],
-        "product_b_ingredients": [
-          "Vitamin C",
-          "Niacinamide",
-          "Peptides"
-        ],
-        "common_ingredients": [
-          "Vitamin C"
-        ],
-        "unique_to_a": [
-          "Hyaluronic Acid"
-        ],
-        "unique_to_b": [
-          "Niacinamide",
-          "Peptides"
-        ],
-        "analysis": "Both products contain vitamin C, but GlowBoost Vitamin C Serum focuses on Vitamin C, Hyaluronic Acid while the competitor includes additional anti-aging compounds."
-      }
+  "products": {
+    "primary": {
+      "name": "Vitamin C Brightening Serum",
+      "price": "₹899",
+      "keyIngredients": "Vitamin C, Hyaluronic Acid, Niacinamide, Vitamin E",
+      "benefits": "Brightening, Anti-aging, Hydration, Dark spot reduction",
+      "skinType": "All skin types, especially dull and uneven skin",
+      "usage": "Apply 3-4 drops to clean face in the morning. Follow with sunscreen.",
+      "sideEffects": "May cause mild irritation in sensitive individuals",
+      "concentration": "20% Vitamin C"
     },
-    "benefits": {
-      "title": "Benefits Analysis",
-      "content": {
-        "product_a_benefits": [
-          "Brightening",
-          "Fades dark spots"
-        ],
-        "product_b_benefits": [
-          "Anti-aging",
-          "Brightening",
-          "Hydration"
-        ],
-        "overlap": [
-          "Brightening"
-        ],
-        "unique_advantages": [
-          "Fades dark spots"
-        ]
+    "competitors": [
+      {
+        "name": "RadiantGlow Serum",
+        "price": "₹854",
+        "keyIngredients": "Vitamin C, Niacinamide, Peptides",
+        "benefits": "Anti-aging, Hydration, Brightening",
+        "skinType": "All skin types",
+        "usage": "Apply 2-3 drops daily",
+        "sideEffects": "May cause initial dryness",
+        "concentration": "15% Vitamin C",
+        "fictional": true
+      },
+      {
+        "name": "PureBright Formula",
+        "price": "₹673",
+        "keyIngredients": "Vitamin C, Niacinamide, Peptides",
+        "benefits": "Anti-aging, Hydration, Brightening",
+        "skinType": "All skin types",
+        "usage": "Apply 2-3 drops daily",
+        "sideEffects": "May cause initial dryness",
+        "concentration": "15% Vitamin C",
+        "fictional": true
       }
-    },
-    "pricing": {
-      "title": "Value Comparison",
-      "content": {
-        "product_a_price": "₹699",
-        "product_b_price": "₹766",
-        "price_difference": "₹66.89277306907434",
-        "better_value": "GlowBoost Vitamin C Serum",
-        "value_analysis": "GlowBoost Vitamin C Serum offers Brightening, Fades dark spots at ₹699, providing good value for Oily, Combination."
-      }
-    },
-    "usage": {
-      "title": "Usage Comparison",
-      "content": {
-        "product_a_usage": "Apply 2–3 drops in the morning before sunscreen",
-        "product_b_usage": "Apply 2-3 drops twice daily",
-        "convenience": "Once daily (morning)",
-        "application_difference": "GlowBoost Vitamin C Serum is designed for morning use, while the competitor requires twice-daily application."
-      }
-    },
-    "safety": {
-      "title": "Safety Profile",
-      "content": {
-        "product_a_safety": "Mild tingling for sensitive skin",
-        "product_b_safety": "Possible mild irritation",
-        "safety_advantage": "Similar safety profiles",
-        "recommendations": [
-          "Patch test both products before use",
-          "Start with lower frequency if sensitive",
-          "Discontinue if irritation occurs"
-        ]
-      }
-    }
-  },
-  "recommendation": {
-    "recommended_product": "GlowBoost Vitamin C Serum",
-    "reasoning": [
-      "Specifically formulated for Oily, Combination",
-      "Contains Vitamin C, Hyaluronic Acid for Brightening, Fades dark spots",
-      "Convenient once-daily application",
-      "Good value at ₹699"
-    ],
-    "best_for": "Individuals with Oily, Combination looking for Brightening, Fades dark spots",
-    "considerations": [
-      "May cause mild tingling for sensitive skin",
-      "Patch test recommended"
     ]
   },
-  "metadata": {
-    "generated_at": "2026-01-02T10:45:08.403Z",
-    "comparison_type": "product_vs_competitor"
-  },
-  "competitive_analysis": {
-    "categories": {
-      "ingredients": {
-        "product_a_score": 65,
-        "product_b_score": 65,
-        "category_winner": "tie"
-      },
-      "benefits": {
-        "product_a_score": 70,
-        "product_b_score": 50,
-        "category_winner": "product_a"
-      },
-      "pricing": {
-        "product_a_score": 75,
-        "product_b_score": 50,
-        "category_winner": "product_a"
-      },
-      "usage": {
-        "product_a_score": 50,
-        "product_b_score": 50,
-        "category_winner": "tie"
-      },
-      "safety": {
-        "product_a_score": 50,
-        "product_b_score": 50,
-        "category_winner": "tie"
-      }
+  "comparison": {
+    "price": {
+      "Vitamin C Brightening Serum": "₹899",
+      "Competitor Product": "₹799",
+      "winner": "Competitor Product",
+      "analysis": "Premium pricing"
     },
-    "overall_winner": "product_a",
-    "score_breakdown": {
-      "product_a_total": 310,
-      "product_b_total": 265,
-      "categories_compared": 5
+    "ingredients": {
+      "Vitamin C Brightening Serum": "Vitamin C, Hyaluronic Acid, Niacinamide, Vitamin E",
+      "Competitor Product": "Vitamin C, Niacinamide",
+      "analysis": "Both products feature vitamin C as primary ingredient"
+    },
+    "benefits": {
+      "Vitamin C Brightening Serum": "Brightening, Anti-aging, Hydration, Dark spot reduction",
+      "Competitor Product": "Anti-aging, Hydration",
+      "analysis": "Different focus areas for skincare benefits"
+    },
+    "usage": {
+      "analysis": "Comparison for usage requires additional data"
+    },
+    "suitability": {
+      "analysis": "Comparison for suitability requires additional data"
     }
   },
-  "decision_matrix": {
+  "analysis": {
+    "methodology": "Comprehensive feature-by-feature comparison",
     "criteria": [
-      {
-        "name": "Price Value",
-        "weight": 0.25
-      },
-      {
-        "name": "Ingredient Quality",
-        "weight": 0.2
-      },
-      {
-        "name": "Ease of Use",
-        "weight": 0.15
-      },
-      {
-        "name": "Safety Profile",
-        "weight": 0.2
-      },
-      {
-        "name": "Expected Results",
-        "weight": 0.2
-      }
+      "Price competitiveness",
+      "Ingredient quality",
+      "Benefit alignment",
+      "Usage convenience"
     ],
-    "scores": {
-      "Price Value": {
-        "product_a": 9,
-        "product_b": 6
-      },
-      "Ingredient Quality": {
-        "product_a": 8,
-        "product_b": 8
-      },
-      "Ease of Use": {
-        "product_a": 7,
-        "product_b": 7
-      },
-      "Safety Profile": {
-        "product_a": 7,
-        "product_b": 7
-      },
-      "Expected Results": {
-        "product_a": 8,
-        "product_b": 7
-      }
-    },
-    "weighted_totals": {
-      "Price Value": {
-        "product_a": 2.25,
-        "product_b": 1.5
-      },
-      "Ingredient Quality": {
-        "product_a": 1.6,
-        "product_b": 1.6
-      },
-      "Ease of Use": {
-        "product_a": 1.05,
-        "product_b": 1.05
-      },
-      "Safety Profile": {
-        "product_a": 1.4000000000000001,
-        "product_b": 1.4000000000000001
-      },
-      "Expected Results": {
-        "product_a": 1.6,
-        "product_b": 1.4000000000000001
-      }
-    },
-    "recommendation": "product_a",
-    "final_scores": {
-      "product_a": 7.9,
-      "product_b": 7
-    }
+    "conclusion": "Vitamin C Brightening Serum offers competitive advantages in key areas",
+    "recommendation": "Consider individual skin needs and preferences when choosing"
   },
-  "market_positioning": {
-    "price_segment": "mid_range",
-    "competitive_position": "value_leader",
-    "target_market": "oily_acne_prone_skin",
-    "differentiation_strategy": "ingredient_innovation",
-    "market_opportunity": {
-      "competitive_advantages": [
-        "Price competitiveness",
-        "Unique ingredient profile"
-      ],
-      "market_challenges": [
-        "Fewer claimed benefits"
-      ],
-      "opportunity_score": 3
-    }
+  "metadata": {
+    "generatedAt": "2026-01-02T15:34:42.590Z",
+    "templateVersion": "1.0"
   },
-  "persona_recommendations": {
-    "budget_conscious": {
-      "recommendation": "GlowBoost Vitamin C Serum",
-      "reasoning": "Best value for money with effective results"
-    },
-    "ingredient_focused": {
-      "recommendation": "GlowBoost Vitamin C Serum",
-      "reasoning": "Specifically formulated with Vitamin C, Hyaluronic Acid for targeted benefits"
-    },
-    "convenience_seeker": {
-      "recommendation": "Competitor",
-      "reasoning": "Simpler application routine fits busy lifestyle"
-    },
-    "safety_first": {
-      "recommendation": "Both products",
-      "reasoning": "Better safety profile for sensitive users"
-    }
+  "productName": "Vitamin C Brightening Serum",
+  "basePrice": "₹899",
+  "targetSkinType": "All skin types, especially dull and uneven skin",
+  "summary": {
+    "overallAssessment": "Vitamin C Brightening Serum provides competitive value",
+    "keyStrengths": [
+      "Effective Brightening, Anti-aging, Hydration, Dark spot reduction",
+      "Quality ingredients: Vitamin C, Hyaluronic Acid, Niacinamide, Vitamin E",
+      "Competitive pricing at ₹899"
+    ],
+    "considerations": [
+      "Individual skin sensitivity may vary",
+      "Results depend on consistent use",
+      "Patch testing recommended"
+    ]
   },
-  "generation_info": {
-    "agent": "ComparisonPageAgent",
-    "template_used": "COMPARISON_PAGE_TEMPLATE",
-    "processing_time": 1767350708404,
-    "autonomy_level": 0.8
-  },
-  "validation": {
-    "valid": true,
-    "issues": [],
-    "quality_score": 100,
-    "completeness": {}
+  "recommendations": {
+    "bestFor": "Users with All skin types, especially dull and uneven skin seeking Brightening, Anti-aging, Hydration, Dark spot reduction",
+    "alternatives": "Consider other products if specific ingredients are preferred",
+    "decisionFactors": [
+      "Skin type compatibility",
+      "Budget considerations",
+      "Ingredient preferences",
+      "Usage convenience"
+    ]
   }
 }

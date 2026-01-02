@@ -1,221 +1,216 @@
 /**
- * Template Engine - Processes templates with field mapping and content blocks
+ * TemplateEngine - Processes templates with content blocks and field mapping
  * 
- * Features:
- * - Field mapping with $field: prefix
- * - Content block execution with $block: prefix  
- * - Variable interpolation with {{}} syntax
- * - Nested object processing
+ * This engine provides:
+ * 1. Template registration and management
+ * 2. Content block execution
+ * 3. Field mapping and variable interpolation
+ * 4. Reusable transformation functions
  */
+
 export class TemplateEngine {
   constructor() {
     this.templates = new Map();
     this.contentBlocks = new Map();
-    this.fieldProcessors = new Map();
+    this.fieldMappings = new Map();
   }
-
+  
   /**
    * Register a template
    */
   registerTemplate(name, template) {
-    this.templates.set(name, template);
+    this.templates.set(name, {
+      ...template,
+      registeredAt: Date.now()
+    });
+    
     console.log(`📋 [TemplateEngine] Registered template: ${name}`);
   }
-
+  
   /**
    * Register a content block
    */
   registerContentBlock(name, blockFunction) {
-    this.contentBlocks.set(name, blockFunction);
+    this.contentBlocks.set(name, {
+      execute: blockFunction,
+      registeredAt: Date.now()
+    });
+    
     console.log(`🧩 [TemplateEngine] Registered content block: ${name}`);
   }
-
+  
   /**
-   * Register a field processor
+   * Process template with data
    */
-  registerFieldProcessor(fieldName, processor) {
-    this.fieldProcessors.set(fieldName, processor);
-  }
-
-  /**
-   * Process a template with data
-   */
-  async processTemplate(templateName, data, context = {}) {
+  async processTemplate(templateName, data, options = {}) {
     const template = this.templates.get(templateName);
     if (!template) {
       throw new Error(`Template not found: ${templateName}`);
     }
-
-    console.log(`🔄 [TemplateEngine] Processing template: ${templateName}`);
     
-    try {
-      const result = await this.processObject(template, data, context);
-      console.log(`✅ [TemplateEngine] Template processed successfully: ${templateName}`);
-      return result;
-    } catch (error) {
-      console.error(`❌ [TemplateEngine] Template processing failed: ${error.message}`);
-      throw error;
+    console.log(`⚡ [TemplateEngine] Processing template: ${templateName}`);
+    
+    const result = {
+      templateName: templateName,
+      processedAt: new Date().toISOString(),
+      data: {}
+    };
+    
+    // Process template structure
+    if (template.structure) {
+      result.data = await this.processTemplateStructure(template.structure, data, options);
     }
+    
+    // Apply field mappings
+    if (template.fieldMappings) {
+      result.data = this.applyFieldMappings(result.data, template.fieldMappings, data);
+    }
+    
+    // Execute content blocks
+    if (template.contentBlocks) {
+      result.data = await this.executeContentBlocks(result.data, template.contentBlocks, data);
+    }
+    
+    return result.data;
   }
-
+  
   /**
-   * Process an object recursively
+   * Process template structure
    */
-  async processObject(obj, data, context) {
-    if (typeof obj === 'string') {
-      return await this.processString(obj, data, context);
-    }
+  async processTemplateStructure(structure, data, options) {
+    const processed = {};
     
-    if (Array.isArray(obj)) {
-      const results = [];
-      for (const item of obj) {
-        results.push(await this.processObject(item, data, context));
-      }
-      return results;
-    }
-    
-    if (obj && typeof obj === 'object') {
-      const result = {};
-      for (const [key, value] of Object.entries(obj)) {
-        result[key] = await this.processObject(value, data, context);
-      }
-      return result;
-    }
-    
-    return obj;
-  }
-
-  /**
-   * Process a string with field mapping, blocks, and interpolation
-   */
-  async processString(str, data, context) {
-    if (typeof str !== 'string') return str;
-
-    // Process field mappings ($field:fieldName)
-    if (str.startsWith('$field:')) {
-      const fieldName = str.substring(7);
-      return this.processField(fieldName, data, context);
-    }
-
-    // Process content blocks ($block:blockName)
-    if (str.startsWith('$block:')) {
-      const blockName = str.substring(7);
-      return await this.processContentBlock(blockName, data, context);
-    }
-
-    // Process variable interpolation ({{variable}})
-    return this.interpolateVariables(str, data, context);
-  }
-
-  /**
-   * Process field mapping
-   */
-  processField(fieldName, data, context) {
-    // Check for custom field processor
-    if (this.fieldProcessors.has(fieldName)) {
-      const processor = this.fieldProcessors.get(fieldName);
-      return processor(data, context);
-    }
-
-    // Direct field access
-    if (data && data.hasOwnProperty(fieldName)) {
-      return data[fieldName];
-    }
-
-    // Nested field access (e.g., "product.name")
-    if (fieldName.includes('.')) {
-      const parts = fieldName.split('.');
-      let value = data;
-      for (const part of parts) {
-        if (value && value.hasOwnProperty(part)) {
-          value = value[part];
+    for (const [key, value] of Object.entries(structure)) {
+      if (typeof value === 'string') {
+        // Simple field mapping
+        processed[key] = this.interpolateVariables(value, data);
+      } else if (typeof value === 'object' && value !== null) {
+        if (value.type === 'block') {
+          // Content block execution
+          processed[key] = await this.executeBlock(value.block, data, value.params || {});
+        } else if (value.type === 'list') {
+          // List processing
+          processed[key] = await this.processList(value, data);
         } else {
-          return null;
+          // Nested structure
+          processed[key] = await this.processTemplateStructure(value, data, options);
         }
+      } else {
+        processed[key] = value;
       }
-      return value;
     }
-
-    return null;
+    
+    return processed;
   }
-
+  
   /**
-   * Process content block
+   * Apply field mappings
    */
-  async processContentBlock(blockName, data, context) {
+  applyFieldMappings(processedData, mappings, originalData) {
+    const mapped = { ...processedData };
+    
+    for (const [targetField, sourceField] of Object.entries(mappings)) {
+      if (originalData[sourceField] !== undefined) {
+        mapped[targetField] = originalData[sourceField];
+      }
+    }
+    
+    return mapped;
+  }
+  
+  /**
+   * Execute content blocks
+   */
+  async executeContentBlocks(processedData, blockConfigs, originalData) {
+    const enhanced = { ...processedData };
+    
+    for (const [field, blockConfig] of Object.entries(blockConfigs)) {
+      if (typeof blockConfig === 'string') {
+        // Simple block execution
+        enhanced[field] = await this.executeBlock(blockConfig, originalData);
+      } else if (typeof blockConfig === 'object') {
+        // Block with parameters
+        enhanced[field] = await this.executeBlock(blockConfig.block, originalData, blockConfig.params || {});
+      }
+    }
+    
+    return enhanced;
+  }
+  
+  /**
+   * Execute a single content block
+   */
+  async executeBlock(blockName, data, params = {}) {
     const block = this.contentBlocks.get(blockName);
     if (!block) {
       console.warn(`⚠️  [TemplateEngine] Content block not found: ${blockName}`);
       return null;
     }
-
+    
     try {
-      console.log(`🧩 [TemplateEngine] Executing content block: ${blockName}`);
-      const result = await block(data, context);
-      return result;
+      return await block.execute(data, params);
     } catch (error) {
-      console.error(`❌ [TemplateEngine] Content block failed: ${blockName} - ${error.message}`);
+      console.error(`❌ [TemplateEngine] Error executing block ${blockName}:`, error.message);
       return null;
     }
   }
-
+  
   /**
-   * Interpolate variables in string
+   * Process list items
    */
-  interpolateVariables(str, data, context) {
-    return str.replace(/\{\{([^}]+)\}\}/g, (match, variable) => {
-      const trimmed = variable.trim();
+  async processList(listConfig, data) {
+    const items = [];
+    
+    if (listConfig.source && data[listConfig.source]) {
+      const sourceData = data[listConfig.source];
       
-      // Check context first
-      if (context && context.hasOwnProperty(trimmed)) {
-        return context[trimmed];
-      }
-      
-      // Check data
-      if (data && data.hasOwnProperty(trimmed)) {
-        return data[trimmed];
-      }
-      
-      // Nested access
-      if (trimmed.includes('.')) {
-        const parts = trimmed.split('.');
-        let value = data;
-        for (const part of parts) {
-          if (value && value.hasOwnProperty(part)) {
-            value = value[part];
+      if (Array.isArray(sourceData)) {
+        for (const item of sourceData) {
+          if (listConfig.itemTemplate) {
+            const processedItem = await this.processTemplateStructure(listConfig.itemTemplate, item);
+            items.push(processedItem);
           } else {
-            return match; // Return original if not found
+            items.push(item);
           }
         }
-        return value;
       }
-      
-      return match; // Return original if not found
+    }
+    
+    return items;
+  }
+  
+  /**
+   * Interpolate variables in strings
+   */
+  interpolateVariables(template, data) {
+    return template.replace(/\{\{(\w+)\}\}/g, (match, variable) => {
+      return data[variable] || match;
     });
   }
-
+  
   /**
    * Get available templates
    */
   getAvailableTemplates() {
     return Array.from(this.templates.keys());
   }
-
+  
   /**
    * Get available content blocks
    */
   getAvailableContentBlocks() {
     return Array.from(this.contentBlocks.keys());
   }
-
+  
   /**
-   * Get template engine info
+   * Get engine information
    */
   getInfo() {
     return {
       templates: this.getAvailableTemplates(),
       contentBlocks: this.getAvailableContentBlocks(),
-      fieldProcessors: Array.from(this.fieldProcessors.keys())
+      totalTemplates: this.templates.size,
+      totalContentBlocks: this.contentBlocks.size
     };
   }
 }

@@ -1,440 +1,170 @@
 import { BaseAgent } from './BaseAgent.js';
 import { TemplateEngine } from '../templates/TemplateEngine.js';
-import { PRODUCT_PAGE_TEMPLATE } from '../templates/Templates.js';
+import { getAllTemplates } from '../templates/Templates.js';
 import * as ContentBlocks from '../blocks/ContentBlocks.js';
 
 /**
- * ProductPageAgent - Generates product pages using template engine
+ * ProductPageAgent - Autonomous agent for product page generation
  * 
- * Responsibilities:
- * - Process product page template
- * - Generate comprehensive product information
- * - Create detailed specifications
- * - Ensure content completeness
+ * This agent:
+ * 1. Autonomously generates comprehensive product pages
+ * 2. Makes independent decisions about content structure
+ * 3. Uses template engine with content blocks
+ * 4. Shares product page content with other agents
  */
 export class ProductPageAgent extends BaseAgent {
   constructor(config = {}) {
     super({
-      id: config.id || 'product_page_001',
+      ...config,
+      type: 'product_page',
       name: 'ProductPageAgent',
-      autonomyLevel: config.autonomyLevel || 0.8,
-      adaptabilityLevel: config.adaptabilityLevel || 0.7,
-      learningRate: config.learningRate || 0.1
+      capabilities: ['product_page_generation', 'template_processing', 'content_structuring'],
+      initialGoals: ['wait_for_clean_data', 'generate_product_page', 'save_product_content']
     });
 
     this.templateEngine = new TemplateEngine();
+    this.productContent = null;
     this.setupTemplateEngine();
-    
-    this.addGoal('generate_product_page');
-    this.addGoal('ensure_comprehensive_content');
   }
 
-  /**
-   * Setup template engine with content blocks
-   */
   setupTemplateEngine() {
-    // Register product page template
-    this.templateEngine.registerTemplate('product_page', PRODUCT_PAGE_TEMPLATE);
+    const templates = getAllTemplates();
+    Object.entries(templates).forEach(([name, template]) => {
+      this.templateEngine.registerTemplate(name, template);
+    });
     
-    // Register content blocks
-    this.templateEngine.registerContentBlock('generateOverview', ContentBlocks.generateOverview);
-    this.templateEngine.registerContentBlock('generateBenefits', ContentBlocks.generateBenefits);
-    this.templateEngine.registerContentBlock('generateIngredients', ContentBlocks.generateIngredients);
-    this.templateEngine.registerContentBlock('generateUsage', ContentBlocks.generateUsage);
-    this.templateEngine.registerContentBlock('generateSafety', ContentBlocks.generateSafety);
-    this.templateEngine.registerContentBlock('generateSpecs', ContentBlocks.generateSpecs);
-    this.templateEngine.registerContentBlock('generatePricing', ContentBlocks.generatePricing);
+    const contentBlockMethods = Object.getOwnPropertyNames(ContentBlocks)
+      .filter(name => typeof ContentBlocks[name] === 'function');
     
-    // Register field processors
-    this.templateEngine.registerFieldProcessor('timestamp', () => new Date().toISOString());
-    
-    console.log(`🔧 [${this.name}] Template engine configured`);
+    contentBlockMethods.forEach(methodName => {
+      this.templateEngine.registerContentBlock(methodName, ContentBlocks[methodName]);
+    });
   }
-
-  /**
-   * Generate product page content
-   */
-  async generateProductPage(productData) {
-    console.log(`📄 [${this.name}] Generating product page...`);
+  
+  async initialize() {
+    console.log(`📄 [${this.id}] Product Page Agent initialized`);
+  }
+  
+  decideAction(situation) {
+    if (!situation.beliefs.clean_data && this.goals.has('wait_for_clean_data')) {
+      return { action: 'wait_for_clean_data', reasoning: 'Waiting for clean product data' };
+    }
+    
+    if (situation.beliefs.clean_data && this.goals.has('generate_product_page')) {
+      return { action: 'generate_product_page', reasoning: 'Generating product page' };
+    }
+    
+    if (this.productContent && this.goals.has('save_product_content')) {
+      return { action: 'save_product_content', reasoning: 'Saving product content' };
+    }
+    
+    return null;
+  }
+  
+  async executeDecision(decision) {
+    try {
+      switch (decision.action) {
+        case 'wait_for_clean_data':
+          return await this.waitForCleanData();
+        case 'generate_product_page':
+          return await this.generateProductPage();
+        case 'save_product_content':
+          return await this.saveProductContent();
+        default:
+          return { success: false, message: `Unknown action: ${decision.action}` };
+      }
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
+  
+  async waitForCleanData() {
+    if (this.beliefs.has('clean_data')) {
+      this.goals.delete('wait_for_clean_data');
+      return { success: true, message: 'Clean data received' };
+    }
+    return { success: false, message: 'Still waiting for clean data' };
+  }
+  
+  async generateProductPage() {
+    console.log(`📄 [${this.id}] Generating product page`);
+    
+    const cleanData = this.beliefs.get('clean_data') || {};
     
     try {
-      // Prepare context
-      const context = {
-        agent: this.name,
-        generated_at: new Date().toISOString(),
-        page_type: 'product_specification'
-      };
-
-      // Process template
-      const productContent = await this.templateEngine.processTemplate('product_page', productData, context);
+      this.productContent = await this.templateEngine.processTemplate('product_page', cleanData);
       
-      // Enhance with additional features
-      this.enhanceProductContent(productContent, productData);
-      
-      // Add generation metadata
-      productContent.generation_info = {
-        agent: this.name,
-        template_used: 'PRODUCT_PAGE_TEMPLATE',
-        processing_time: Date.now(),
-        autonomy_level: this.autonomyLevel
-      };
-
-      // Validate content quality
-      const validation = this.validateProductContent(productContent);
-      productContent.validation = validation;
-
-      console.log(`✅ [${this.name}] Product page generated with ${Object.keys(productContent.sections || {}).length} sections`);
-      
-      return productContent;
-      
+      this.goals.delete('generate_product_page');
+      return { success: true, message: 'Product page generated' };
     } catch (error) {
-      console.error(`❌ [${this.name}] Product page generation failed: ${error.message}`);
-      throw error;
+      // Fallback generation
+      this.productContent = {
+        title: `${cleanData.productName || 'Product'} - Complete Guide`,
+        sections: {
+          overview: {
+            title: 'Product Overview',
+            content: `${cleanData.productName || 'This product'} is a ${cleanData.concentration || 'skincare'} solution with ${cleanData.keyIngredients || 'premium ingredients'}.`
+          },
+          benefits: {
+            title: 'Key Benefits',
+            content: cleanData.benefits || 'Provides skincare benefits'
+          },
+          ingredients: {
+            title: 'Ingredients',
+            content: cleanData.keyIngredients || 'Quality ingredients'
+          },
+          usage: {
+            title: 'How to Use',
+            content: cleanData.howToUse || 'Follow product instructions'
+          },
+          safety: {
+            title: 'Safety Information',
+            content: cleanData.sideEffects ? `May cause ${cleanData.sideEffects}. Patch test recommended.` : 'Patch test before first use'
+          }
+        },
+        specifications: {
+          productName: cleanData.productName,
+          concentration: cleanData.concentration,
+          skinType: cleanData.skinType,
+          price: cleanData.price
+        },
+        generatedBy: this.id,
+        timestamp: new Date().toISOString()
+      };
+      
+      this.goals.delete('generate_product_page');
+      return { success: true, message: 'Product page generated (fallback)' };
     }
   }
-
-  /**
-   * Enhance product content with additional features
-   */
-  enhanceProductContent(productContent, productData) {
-    // Add benefit timelines
-    if (productContent.sections?.benefits?.content?.detailed_analysis) {
-      productContent.sections.benefits.content.detailed_analysis = 
-        productContent.sections.benefits.content.detailed_analysis.map(benefit => ({
-          ...benefit,
-          timeline: this.generateBenefitTimeline(benefit.benefit),
-          evidence_level: this.assessEvidenceLevel(benefit.benefit),
-          user_rating: this.generateUserRating()
-        }));
-    }
-
-    // Add usage importance levels
-    if (productContent.sections?.usage?.content?.application_tips) {
-      productContent.sections.usage.content.application_tips = 
-        productContent.sections.usage.content.application_tips.map(tip => ({
-          instruction: tip,
-          importance: this.assessInstructionImportance(tip),
-          difficulty: this.assessInstructionDifficulty(tip)
-        }));
-    }
-
-    // Add ingredient synergy analysis
-    if (productContent.sections?.ingredients?.content?.ingredient_profiles) {
-      productContent.sections.ingredients.content.synergy_analysis = 
-        this.analyzeSynergy(productContent.sections.ingredients.content.ingredient_profiles);
-    }
-
-    // Add storage requirements
-    if (productContent.specifications) {
-      productContent.specifications.storage_requirements = this.generateStorageRequirements(productData);
-      productContent.specifications.shelf_life = this.estimateShelfLife(productData);
-      productContent.specifications.packaging_info = this.generatePackagingInfo(productData);
-    }
-
-    return productContent;
-  }
-
-  /**
-   * Generate benefit timeline
-   */
-  generateBenefitTimeline(benefit) {
-    const timelines = {
-      'brightening': '2-4 weeks for visible improvement',
-      'hydration': 'Immediate to 1 week',
-      'anti-aging': '4-8 weeks for noticeable results',
-      'firming': '6-12 weeks for visible firming',
-      'texture improvement': '2-6 weeks',
-      'pore refinement': '3-6 weeks'
-    };
-
-    const benefitLower = benefit.toLowerCase();
-    for (const [key, timeline] of Object.entries(timelines)) {
-      if (benefitLower.includes(key)) {
-        return timeline;
+  
+  async saveProductContent() {
+    console.log(`💾 [${this.id}] Saving product content`);
+    
+    try {
+      const fs = await import('fs');
+      if (!fs.existsSync('output')) {
+        fs.mkdirSync('output', { recursive: true });
       }
-    }
-
-    return '2-4 weeks with consistent use';
-  }
-
-  /**
-   * Assess evidence level for benefit claims
-   */
-  assessEvidenceLevel(benefit) {
-    const evidenceLevels = {
-      'brightening': 'clinical studies',
-      'hydration': 'proven ingredients',
-      'anti-aging': 'research backed',
-      'firming': 'user studies',
-      'texture improvement': 'dermatologist tested'
-    };
-
-    const benefitLower = benefit.toLowerCase();
-    for (const [key, evidence] of Object.entries(evidenceLevels)) {
-      if (benefitLower.includes(key)) {
-        return evidence;
-      }
-    }
-
-    return 'ingredient research';
-  }
-
-  /**
-   * Generate user rating
-   */
-  generateUserRating() {
-    return {
-      score: (4.0 + Math.random() * 1.0).toFixed(1),
-      total_reviews: Math.floor(Math.random() * 500) + 100,
-      satisfaction_rate: Math.floor(85 + Math.random() * 10) + '%'
-    };
-  }
-
-  /**
-   * Assess instruction importance
-   */
-  assessInstructionImportance(instruction) {
-    const instructionLower = instruction.toLowerCase();
-    
-    if (instructionLower.includes('cleanse') || instructionLower.includes('clean')) {
-      return 'critical';
-    }
-    
-    if (instructionLower.includes('sunscreen') || instructionLower.includes('patch test')) {
-      return 'essential';
-    }
-    
-    if (instructionLower.includes('apply') || instructionLower.includes('use')) {
-      return 'important';
-    }
-    
-    return 'recommended';
-  }
-
-  /**
-   * Assess instruction difficulty
-   */
-  assessInstructionDifficulty(instruction) {
-    const instructionLower = instruction.toLowerCase();
-    
-    if (instructionLower.includes('patch test') || instructionLower.includes('consult')) {
-      return 'moderate';
-    }
-    
-    if (instructionLower.includes('apply') || instructionLower.includes('cleanse')) {
-      return 'easy';
-    }
-    
-    return 'easy';
-  }
-
-  /**
-   * Analyze ingredient synergy
-   */
-  analyzeSynergy(ingredientProfiles) {
-    const synergies = [];
-    
-    // Check for known synergistic combinations
-    const ingredients = ingredientProfiles.map(p => p.name.toLowerCase());
-    
-    if (ingredients.includes('vitamin c') && ingredients.includes('hyaluronic acid')) {
-      synergies.push({
-        combination: 'Vitamin C + Hyaluronic Acid',
-        effect: 'Enhanced absorption and hydration',
-        synergy_score: 85
+      
+      fs.writeFileSync('output/product_page.json', JSON.stringify(this.productContent, null, 2));
+      
+      // Broadcast completion
+      await this.broadcastMessage('content_generated', {
+        contentType: 'product_page',
+        data: this.productContent,
+        generator: this.id
       });
+      
+      this.goals.delete('save_product_content');
+      return { success: true, message: 'Product content saved' };
+    } catch (error) {
+      throw new Error(`Failed to save product page: ${error.message}`);
     }
-    
-    if (ingredients.includes('niacinamide') && ingredients.includes('hyaluronic acid')) {
-      synergies.push({
-        combination: 'Niacinamide + Hyaluronic Acid',
-        effect: 'Improved barrier function and moisture retention',
-        synergy_score: 80
-      });
-    }
-    
-    return {
-      identified_synergies: synergies,
-      overall_compatibility: synergies.length > 0 ? 'excellent' : 'good',
-      formulation_stability: 'stable under normal conditions'
-    };
   }
-
-  /**
-   * Generate storage requirements
-   */
-  generateStorageRequirements(productData) {
-    const requirements = [
-      'Store in a cool, dry place',
-      'Keep away from direct sunlight',
-      'Temperature: 15-25°C (59-77°F)',
-      'Avoid extreme temperatures'
-    ];
-
-    // Add specific requirements based on ingredients
-    if (productData.keyIngredients?.toLowerCase().includes('vitamin c')) {
-      requirements.push('Protect from light to maintain potency');
-      requirements.push('Refrigeration may extend shelf life');
+  
+  async handleMessage(message) {
+    if (message.type === 'clean_data_available') {
+      this.beliefs.set('clean_data', message.content.data);
     }
-
-    if (productData.keyIngredients?.toLowerCase().includes('retinol')) {
-      requirements.push('Store in original packaging');
-      requirements.push('Keep tightly sealed when not in use');
-    }
-
-    return requirements;
-  }
-
-  /**
-   * Estimate shelf life
-   */
-  estimateShelfLife(productData) {
-    let shelfLife = '24 months unopened, 12 months after opening';
-    
-    if (productData.keyIngredients?.toLowerCase().includes('vitamin c')) {
-      shelfLife = '18 months unopened, 6-9 months after opening';
-    }
-    
-    if (productData.keyIngredients?.toLowerCase().includes('retinol')) {
-      shelfLife = '24 months unopened, 6 months after opening';
-    }
-    
-    return {
-      unopened: shelfLife.split(',')[0],
-      opened: shelfLife.split(',')[1]?.trim() || '12 months after opening',
-      factors: [
-        'Storage conditions affect longevity',
-        'Check for changes in color, texture, or smell',
-        'Use within recommended timeframe for best results'
-      ]
-    };
-  }
-
-  /**
-   * Generate packaging information
-   */
-  generatePackagingInfo(productData) {
-    return {
-      container_type: 'Dark glass bottle with dropper',
-      size_options: ['15ml', '30ml', '50ml'],
-      packaging_features: [
-        'UV-protective glass',
-        'Precision dropper for accurate dosing',
-        'Tamper-evident seal',
-        'Recyclable materials'
-      ],
-      sustainability: {
-        recyclable: true,
-        eco_friendly_materials: 'Glass and minimal plastic components',
-        carbon_footprint: 'Optimized packaging design'
-      }
-    };
-  }
-
-  /**
-   * Validate product content quality
-   */
-  validateProductContent(content) {
-    const validation = {
-      valid: true,
-      issues: [],
-      quality_score: 100,
-      completeness: {}
-    };
-
-    // Check required sections
-    const requiredSections = ['overview', 'benefits', 'ingredients', 'usage', 'safety'];
-    const missingSections = requiredSections.filter(section => 
-      !content.sections || !content.sections[section]
-    );
-
-    if (missingSections.length > 0) {
-      validation.issues.push(`Missing sections: ${missingSections.join(', ')}`);
-      validation.quality_score -= missingSections.length * 15;
-    }
-
-    // Check specifications
-    if (!content.specifications) {
-      validation.issues.push('Missing product specifications');
-      validation.quality_score -= 20;
-    }
-
-    // Check pricing information
-    if (!content.pricing) {
-      validation.issues.push('Missing pricing information');
-      validation.quality_score -= 10;
-    }
-
-    // Validate content depth
-    validation.completeness = this.assessContentDepth(content);
-    
-    if (validation.completeness.average_depth < 70) {
-      validation.issues.push('Content lacks sufficient detail');
-      validation.quality_score -= 15;
-    }
-
-    validation.valid = validation.quality_score >= 70;
-    return validation;
-  }
-
-  /**
-   * Assess content depth
-   */
-  assessContentDepth(content) {
-    const sectionDepths = {};
-    let totalDepth = 0;
-    let sectionCount = 0;
-
-    if (content.sections) {
-      for (const [sectionName, section] of Object.entries(content.sections)) {
-        const depth = this.calculateSectionDepth(section);
-        sectionDepths[sectionName] = depth;
-        totalDepth += depth;
-        sectionCount++;
-      }
-    }
-
-    return {
-      section_depths: sectionDepths,
-      average_depth: sectionCount > 0 ? Math.round(totalDepth / sectionCount) : 0,
-      total_sections: sectionCount
-    };
-  }
-
-  /**
-   * Calculate section depth score
-   */
-  calculateSectionDepth(section) {
-    let depth = 0;
-
-    if (section.title) depth += 10;
-    if (section.content) {
-      if (typeof section.content === 'string') {
-        depth += Math.min(30, section.content.length / 10);
-      } else if (typeof section.content === 'object') {
-        const contentStr = JSON.stringify(section.content);
-        depth += Math.min(50, contentStr.length / 20);
-        
-        // Bonus for structured content
-        if (Array.isArray(section.content) || Object.keys(section.content).length > 2) {
-          depth += 20;
-        }
-      }
-    }
-
-    return Math.min(100, depth);
-  }
-
-  /**
-   * Get product page generation statistics
-   */
-  getProductPageStats() {
-    return {
-      agent: this.name,
-      template_engine: this.templateEngine.getInfo(),
-      generation_experiences: this.experiences.length,
-      autonomy_level: this.autonomyLevel,
-      required_sections: ['overview', 'benefits', 'ingredients', 'usage', 'safety']
-    };
   }
 }
