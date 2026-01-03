@@ -20,7 +20,7 @@
     "competitors": [
       {
         "name": "RadiantGlow Serum",
-        "price": "₹854",
+        "price": "₹957",
         "keyIngredients": "Vitamin C, Niacinamide, Peptides",
         "benefits": "Anti-aging, Hydration, Brightening",
         "skinType": "All skin types",
@@ -31,7 +31,7 @@
       },
       {
         "name": "PureBright Formula",
-        "price": "₹673",
+        "price": "₹752",
         "keyIngredients": "Vitamin C, Niacinamide, Peptides",
         "benefits": "Anti-aging, Hydration, Brightening",
         "skinType": "All skin types",
@@ -78,7 +78,7 @@
     "recommendation": "Consider individual skin needs and preferences when choosing"
   },
   "metadata": {
-    "generatedAt": "2026-01-02T15:34:42.590Z",
+    "generatedAt": "2026-01-03T05:34:31.869Z",
     "templateVersion": "1.0"
   },
   "productName": "Vitamin C Brightening Serum",

@@ -1,0 +1,140 @@
+{
+  "overall_performance": {
+    "overall_score": 78,
+    "content_pieces_analyzed": 3,
+    "performance_grade": "B",
+    "meets_quality_standards": true
+  },
+  "content_analysis": {
+    "faq_content": {
+      "content_type": "faq_content",
+      "quality_score": 90,
+      "metrics": {
+        "question_count": 15,
+        "category_count": 6,
+        "avg_answer_length": 103,
+        "content_coverage": 75,
+        "readability_score": 86
+      },
+      "strengths": [
+        "Strong avg answer_length",
+        "Strong readability score"
+      ],
+      "weaknesses": [
+        "Weak question count",
+        "Weak category count"
+      ],
+      "recommendations": [
+        {
+          "type": "improvement",
+          "recommendation": "Improve weak question count",
+          "priority": "medium"
+        },
+        {
+          "type": "improvement",
+          "recommendation": "Improve weak category count",
+          "priority": "medium"
+        }
+      ]
+    },
+    "product_content": {
+      "content_type": "product_content",
+      "quality_score": 80,
+      "metrics": {
+        "section_count": 5,
+        "specification_count": 6,
+        "content_depth": 10,
+        "information_completeness": 100
+      },
+      "strengths": [
+        "Strong information completeness"
+      ],
+      "weaknesses": [
+        "Weak section count",
+        "Weak specification count",
+        "Weak content depth"
+      ],
+      "recommendations": [
+        {
+          "type": "improvement",
+          "recommendation": "Improve weak section count",
+          "priority": "medium"
+        },
+        {
+          "type": "improvement",
+          "recommendation": "Improve weak specification count",
+          "priority": "medium"
+        },
+        {
+          "type": "improvement",
+          "recommendation": "Improve weak content depth",
+          "priority": "medium"
+        }
+      ]
+    },
+    "comparison_content": {
+      "content_type": "comparison_content",
+      "quality_score": 65,
+      "metrics": {
+        "has_primary_product": false,
+        "competitor_count": 0,
+        "analysis_depth": 4,
+        "has_recommendation": false
+      },
+      "strengths": [],
+      "weaknesses": [
+        "Weak competitor count",
+        "Weak analysis depth"
+      ],
+      "recommendations": [
+        {
+          "type": "improvement",
+          "recommendation": "Improve weak competitor count",
+          "priority": "medium"
+        },
+        {
+          "type": "improvement",
+          "recommendation": "Improve weak analysis depth",
+          "priority": "medium"
+        }
+      ]
+    }
+  },
+  "key_insights": [
+    "faq_content shows excellent quality (90/100)",
+    "faq_content strengths: Strong avg answer_length, Strong readability score",
+    "product_content shows excellent quality (80/100)",
+    "product_content strengths: Strong information completeness"
+  ],
+  "optimization_opportunities": [
+    {
+      "content_type": "faq_content",
+      "opportunity": "Increase question count",
+      "current": 15,
+      "target": 20,
+      "impact": "high"
+    },
+    {
+      "content_type": "product_content",
+      "opportunity": "Improve content depth",
+      "current": 10,
+      "target": 85,
+      "impact": "medium"
+    }
+  ],
+  "performance_trends": {
+    "trend_direction": "positive",
+    "consistency": 79.45195332343674,
+    "improvement_potential": 21.66666666666667
+  },
+  "recommendations": [
+    {
+      "priority": "low",
+      "recommendation": "Continue monitoring content quality metrics",
+      "expected_impact": "Sustained quality improvement"
+    }
+  ],
+  "generated_by": "analytics_001",
+  "timestamp": "2026-01-03T05:34:38.001Z",
+  "analysis_version": "1.0"
+}

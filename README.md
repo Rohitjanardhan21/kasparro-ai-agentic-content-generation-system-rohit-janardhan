@@ -1,10 +1,10 @@
-# 8-Agent Multi-Agent Content Generation System
+# 8-Agent Multi-Agent Content Generation System with Autonomous Coordination
 
-[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://github.com/Rohitjanardhan21/Kasparro-agentic-Rohit-Janardhan)
+[![Version](https://img.shields.io/badge/version-5.0.0-blue.svg)](https://github.com/Rohitjanardhan21/Kasparro-agentic-Rohit-Janardhan)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node.js-14%2B-brightgreen.svg)](https://nodejs.org/)
 
-A **true 8-agent multi-agent system** featuring autonomous agents that make independent decisions, communicate directly with each other, and coordinate dynamically without central control to generate comprehensive content from product data.
+A **true 8-agent multi-agent system** featuring **autonomous agents** that are **independent, modular, and coordinated through an orchestration mechanism** to generate comprehensive content from product data. Each agent operates with genuine autonomy and decision-making capabilities.
 
 ## 🚀 Quick Start
 
@@ -13,35 +13,35 @@ A **true 8-agent multi-agent system** featuring autonomous agents that make inde
 git clone https://github.com/Rohitjanardhan21/Kasparro-agentic-Rohit-Janardhan.git
 cd Kasparro-agentic-Rohit-Janardhan
 
-# Run the 8-agent multi-agent system
-npm run generate
+# Run the 8-agent autonomous multi-agent system
+node src/test-8-agent-system.js
 
-# Run comprehensive tests
-npm test
+# Run individual components
+node src/index.js
 ```
 
 ## ✨ Key Features
 
-### 🤖 **8-Agent Multi-Agent Architecture**
+### 🤖 **8-Agent Autonomous Multi-Agent Architecture**
 - **DataParserAgent** - Validates and normalizes product data autonomously
 - **QuestionGeneratorAgent** - Generates 15+ categorized questions independently
-- **ComparisonDataAgent** - Creates competitor data for market analysis
-- **FaqPageAgent** - Generates FAQ pages using template engine
-- **ProductPageAgent** - Creates comprehensive product pages
-- **ComparisonPageAgent** - Generates competitive analysis pages
-- **AnalyticsAgent** - Analyzes content quality and performance metrics
-- **SeoOptimizationAgent** - Optimizes content for search engines
-- **No Central Orchestrator** - Agents coordinate through direct communication
-- **Dynamic Decision Making** - 100% autonomous decision-making
-- **Emergent Coordination** - System behavior emerges from agent interactions
+- **ComparisonDataAgent** - Creates competitor data through autonomous analysis
+- **ProductPageAgent** - Creates comprehensive product pages with decision-making
+- **FaqPageAgent** - Generates FAQ pages using autonomous template processing
+- **ComparisonPageAgent** - Generates competitive analysis through independent logic
+- **AnalyticsAgent** - Analyzes content quality with autonomous assessment
+- **SeoOptimizationAgent** - Optimizes content through independent SEO analysis
+- **Autonomous Coordination** - Orchestration platform facilitates (doesn't control)
+- **Dynamic Interaction** - Agents communicate and collaborate in real-time
+- **Emergent Behavior** - System behavior emerges from agent interactions
 
-### 🧠 **Genuine Autonomy Features**
-- **Independent Decision Making** - Each agent chooses actions based on goals
-- **Inter-Agent Communication** - Direct agent-to-agent messaging and coordination
-- **Concurrent Operation** - All 8 agents running simultaneously
-- **Emergent Coordination** - System behavior emerges from agent interactions
-- **Dynamic Goal Management** - Agents create, modify, and complete goals autonomously
-- **Learning & Adaptation** - Agents learn from experiences and adjust strategies
+### 🎯 **True Multi-Agent Coordination Features**
+- **Autonomous Agents** - Each agent has independent decision-making loops (every 3 seconds)
+- **Dynamic Goal Creation** - Agents create and manage their own goals
+- **Agent-to-Agent Communication** - Direct message passing between agents
+- **Orchestration Platform** - Facilitates coordination without controlling agents
+- **Emergent Workflows** - System behavior emerges from agent interactions
+- **Adaptive Coordination** - Agents adapt based on peer interactions and data availability
 
 ### 🔧 **Template Engine & Content Blocks**
 - **Template Engine** - Field mapping, variable interpolation, block execution
@@ -50,9 +50,9 @@ npm test
 - **Structured Output** - Machine-readable JSON format
 
 ### ⚡ **Performance**
-- **100% Autonomy Ratio** - All decisions made independently by agents
-- **Real-time Coordination** - Dynamic agent interaction and adaptation
-- **Efficient Communication** - Direct agent messaging without bottlenecks
+- **DAG Execution** - Optimal execution order through dependency resolution
+- **Wave-Based Processing** - Parallel execution within dependency constraints
+- **Efficient Orchestration** - Minimal overhead with maximum parallelization
 - **Template-Driven Generation** - Consistent, high-quality content output
 
 ## 📁 Generated Output
@@ -66,54 +66,44 @@ npm test
 
 ## 🏗️ Architecture
 
-### 8-Agent Multi-Agent System
+### 8-Agent Multi-Agent System with DAG Orchestration
 ```
                     ┌─────────────────┐
-                    │ Communication   │ ← Facilitates agent messaging
-                    │      Hub        │   (no control)
-                    └─────────┬───────┘
+                    │   Orchestrator  │ ← DAG-based dependency management
+                    │                 │   Topological sorting
+                    └─────────┬───────┘   Parallel execution
                               │
         ┌─────────────────────┼─────────────────────┐
         │                     │                     │
         ▼                     ▼                     ▼
 ┌─────────────┐    ┌─────────────────┐    ┌─────────────┐
 │DataParser   │    │QuestionGenerator│    │ComparisonData│
-│   Agent     │◄──►│     Agent       │◄──►│   Agent     │
+│   Agent     │    │     Agent       │    │   Agent     │
 │             │    │                 │    │             │
-│• Validates  │    │• Generates 15+  │    │• Creates    │
-│• Normalizes │    │  questions      │    │  competitors│
-│• Shares data│    │• Categorizes    │    │• Market     │
-└─────────────┘    └─────────────────┘    │  analysis   │
+│• Wave 1     │    │• Wave 2         │    │• Wave 2     │
+│• No deps    │    │• Depends on     │    │• Depends on │
+│• Validates  │    │  DataParser     │    │  DataParser │
+└─────────────┘    └─────────────────┘    └─────────────┘
+        │                     │                     │
+        ▼                     ▼                     ▼
+┌─────────────┐    ┌─────────────────┐    ┌─────────────┐
+│ProductPage  │    │FaqPage          │    │ComparisonPage│
+│  Agent      │    │  Agent          │    │   Agent     │
+│             │    │                 │    │             │
+│• Wave 2     │    │• Wave 3         │    │• Wave 3     │
+│• Depends on │    │• Depends on     │    │• Depends on │
+│  DataParser │    │  QuestionGen    │    │  DataParser │
+└─────────────┘    └─────────────────┘    │  & CompData │
         │                     │           └─────────────┘
         ▼                     ▼                     │
 ┌─────────────┐    ┌─────────────────┐              │
-│FaqPage      │    │ProductPage      │              │
-│  Agent      │◄──►│     Agent       │◄─────────────┘
+│Analytics    │    │SeoOptimization  │              │
+│  Agent      │◄───│     Agent       │◄─────────────┘
 │             │    │                 │
-│• Template   │    │• Comprehensive  │
-│  engine     │    │  product info   │
-│• FAQ gen    │    │• Template-driven│
+│• Wave 4     │    │• Wave 4         │
+│• Depends on │    │• Depends on all │
+│  all content│    │  content agents │
 └─────────────┘    └─────────────────┘
-        │                     │
-        ▼                     ▼
-┌─────────────┐    ┌─────────────────┐
-│ComparisonPage│   │Analytics        │
-│   Agent     │◄──►│    Agent        │
-│             │    │                 │
-│• Competitive│    │• Quality        │
-│  analysis   │    │  analysis       │
-│• Template   │    │• Performance    │
-└─────────────┘    └─────────────────┘
-        │                     │
-        ▼                     ▼
-┌─────────────┐              │
-│SeoOptimization│◄───────────┘
-│   Agent     │
-│             │
-│• Keywords   │
-│• Metadata   │
-│• SEO score  │
-└─────────────┘
 ```
 
 ### System Components

@@ -1,11 +1,11 @@
 /**
- * DataParserAgent - Autonomous agent for data parsing and validation
+ * DataParserAgent - Orchestrated agent for data parsing and validation
  * 
  * This agent:
- * 1. Autonomously discovers and validates product data
- * 2. Makes independent decisions about data processing approach
- * 3. Shares clean data with other agents when ready
- * 4. Adapts validation strategies based on data quality
+ * 1. Validates and normalizes product data when executed by orchestrator
+ * 2. Provides clean, structured data for dependent agents
+ * 3. Implements quality assessment and validation rules
+ * 4. Has no dependencies (executes first in DAG)
  */
 
 import { BaseAgent } from './BaseAgent.js';
@@ -17,7 +17,7 @@ export class DataParserAgent extends BaseAgent {
       type: 'data_parser',
       name: 'DataParserAgent',
       capabilities: ['data_validation', 'data_normalization', 'quality_assessment'],
-      initialGoals: ['discover_raw_data', 'validate_data', 'normalize_data', 'share_clean_data']
+      dependencies: [] // No dependencies - executes first
     });
     
     // Parser-specific state
@@ -52,101 +52,126 @@ export class DataParserAgent extends BaseAgent {
   }
   
   /**
-   * Initialize data parser agent
+   * Perform goal-specific work (autonomous agent implementation)
    */
-  async initialize() {
-    console.log(`📊 [${this.id}] Data Parser Agent initialized`);
-    console.log(`   Validation Rules: ${this.validationRules.size} rules configured`);
+  async performGoalWork(goal) {
+    console.log(`📊 [${this.id}] Working on goal: ${goal.description}`);
+    
+    if (goal.description.includes('validate') || goal.description.includes('data')) {
+      return await this.validateAndNormalizeData();
+    }
+    
+    return { success: false, message: 'Unknown goal type' };
   }
   
   /**
-   * Decide what action to take based on situation
+   * Validate and normalize data autonomously
    */
-  decideAction(situation) {
-    // Priority 1: Discover raw data if we don't have any
-    if (!situation.beliefs.available_data && this.goals.has('discover_raw_data')) {
-      return {
-        action: 'discover_raw_data',
-        reasoning: 'Need to find raw product data to process'
-      };
+  async validateAndNormalizeData() {
+    // Get initial context data
+    const initialContext = this.beliefs.get('initial_context');
+    if (!initialContext) {
+      return { success: false, message: 'No initial context data available' };
     }
     
-    // Priority 2: Validate data if we have it but haven't validated
-    if (situation.beliefs.available_data && this.goals.has('validate_data')) {
-      return {
-        action: 'validate_data',
-        data: situation.beliefs.available_data,
-        reasoning: 'Validating discovered product data'
-      };
-    }
-    
-    // Priority 3: Normalize data after validation
-    if (this.processedData && this.goals.has('normalize_data')) {
-      return {
-        action: 'normalize_data',
-        reasoning: 'Normalizing validated data for consistency'
-      };
-    }
-    
-    // Priority 4: Share clean data with other agents
-    if (this.processedData && this.qualityScore > 70 && this.goals.has('share_clean_data')) {
-      return {
-        action: 'share_clean_data',
-        reasoning: 'Sharing clean, validated data with other agents'
-      };
-    }
-    
-    return null; // No action needed
-  }
-  
-  /**
-   * Execute a decision
-   */
-  async executeDecision(decision) {
-    try {
-      switch (decision.action) {
-        case 'discover_raw_data':
-          return await this.discoverRawData();
-          
-        case 'validate_data':
-          return await this.validateData(decision.data);
-          
-        case 'normalize_data':
-          return await this.normalizeData();
-          
-        case 'share_clean_data':
-          return await this.shareCleanData();
-          
-        default:
-          return { success: false, message: `Unknown action: ${decision.action}` };
-      }
-    } catch (error) {
-      return { success: false, message: error.message };
-    }
-  }
-  
-  /**
-   * Discover raw data
-   */
-  async discoverRawData() {
-    // Look for data in beliefs (from system events)
-    if (this.beliefs.has('available_data')) {
-      const data = this.beliefs.get('available_data');
-      console.log(`🔍 [${this.id}] Discovered raw data:`, Object.keys(data));
-      
-      this.goals.delete('discover_raw_data');
-      return { success: true, message: 'Raw data discovered', data: data };
-    }
-    
-    return { success: false, message: 'No raw data available yet' };
-  }
-  
-  /**
-   * Validate data
-   */
-  async validateData(data) {
     console.log(`✅ [${this.id}] Validating product data`);
+    const validationResult = this.validateData(initialContext);
     
+    if (!validationResult.isValid) {
+      return { success: false, message: `Data validation failed: ${validationResult.errors.join(', ')}` };
+    }
+    
+    console.log(`📊 [${this.id}] Validation complete - Score: ${validationResult.score}/100`);
+    this.qualityScore = validationResult.score;
+    
+    // Normalize data
+    console.log(`🔧 [${this.id}] Normalizing data for consistency`);
+    this.processedData = this.normalizeData(initialContext);
+    
+    // Store in beliefs for other agents
+    this.beliefs.set('clean_data', this.processedData);
+    this.knowledge.set('processed_data', this.processedData);
+    
+    console.log(`📤 [${this.id}] Data parsing completed - Quality Score: ${this.qualityScore}/100`);
+    
+    // Share clean data with other agents immediately
+    console.log(`📡 [${this.id}] Broadcasting clean_data_available message...`);
+    await this.broadcastMessage('clean_data_available', {
+      data: this.processedData,
+      provider: this.id,
+      qualityScore: this.qualityScore,
+      timestamp: Date.now()
+    });
+    console.log(`📡 [${this.id}] Broadcast complete`);
+    
+    // Mark all data-related goals as completed
+    for (const goal of this.goals) {
+      if (goal.description.includes('validate') || goal.description.includes('data') || goal.description.includes('process_product')) {
+        goal.status = 'completed';
+        goal.completedAt = Date.now();
+        this.goalsAchieved++;
+      }
+    }
+    
+    // Remove completed goals
+    this.goals = new Set(Array.from(this.goals).filter(goal => goal.status !== 'completed'));
+    
+    return {
+      success: true,
+      message: `Data validated and normalized with quality score ${this.qualityScore}/100`,
+      data: this.processedData
+    };
+  }
+
+  /**
+   * Perform task-specific work for data parsing
+   */
+  async performTaskWork(task) {
+    console.log(`📊 [${this.id}] Starting data parsing task: ${task.id}`);
+    
+    if (!task.data) {
+      throw new Error('No data provided for parsing task');
+    }
+    
+    // Step 1: Validate data
+    console.log(`✅ [${this.id}] Validating product data`);
+    const validationResult = this.validateData(task.data);
+    
+    if (!validationResult.isValid) {
+      throw new Error(`Data validation failed: ${validationResult.errors.join(', ')}`);
+    }
+    
+    console.log(`📊 [${this.id}] Validation complete - Score: ${validationResult.score}/100`);
+    this.qualityScore = validationResult.score;
+    
+    // Step 2: Normalize data
+    console.log(`🔧 [${this.id}] Normalizing data for consistency`);
+    this.processedData = this.normalizeData(task.data);
+    
+    // Step 3: Store in shared data for other agents
+    this.sharedData.set('clean_data', this.processedData);
+    this.sharedData.set('parse_data', this.processedData);
+    
+    // Step 4: Return result
+    const result = {
+      agentId: this.id,
+      taskId: task.id,
+      type: 'clean_data',
+      data: this.processedData,
+      qualityScore: this.qualityScore,
+      validationRules: Array.from(this.validationRules.keys()),
+      timestamp: Date.now()
+    };
+    
+    console.log(`📤 [${this.id}] Data parsing completed - Quality Score: ${this.qualityScore}/100`);
+    
+    return result;
+  }
+  
+  /**
+   * Validate data against rules
+   */
+  validateData(data) {
     const validation = {
       isValid: true,
       errors: [],
@@ -180,37 +205,14 @@ export class DataParserAgent extends BaseAgent {
       }
     }
     
-    this.processedData = {
-      ...data,
-      validation: validation,
-      processedAt: new Date().toISOString(),
-      processedBy: this.id
-    };
-    
-    this.qualityScore = validation.score;
-    
-    console.log(`📊 [${this.id}] Validation complete - Score: ${validation.score}/100`);
-    
-    this.goals.delete('validate_data');
-    
-    return { 
-      success: true, 
-      message: `Data validated with score ${validation.score}/100`,
-      validation: validation
-    };
+    return validation;
   }
   
   /**
-   * Normalize data
+   * Normalize data for consistency
    */
-  async normalizeData() {
-    console.log(`🔧 [${this.id}] Normalizing data for consistency`);
-    
-    if (!this.processedData) {
-      throw new Error('No processed data to normalize');
-    }
-    
-    const normalized = { ...this.processedData };
+  normalizeData(data) {
+    const normalized = { ...data };
     
     // Normalize price format
     if (normalized.price) {
@@ -228,56 +230,11 @@ export class DataParserAgent extends BaseAgent {
         .join(', ');
     }
     
-    // Add normalized flag
-    normalized.normalized = true;
-    normalized.normalizedAt = new Date().toISOString();
+    // Add processing metadata
+    normalized.processed = true;
+    normalized.processedAt = new Date().toISOString();
+    normalized.processedBy = this.id;
     
-    this.processedData = normalized;
-    
-    this.goals.delete('normalize_data');
-    
-    return { 
-      success: true, 
-      message: 'Data normalized successfully',
-      normalizedData: normalized
-    };
-  }
-  
-  /**
-   * Share clean data with other agents
-   */
-  async shareCleanData() {
-    console.log(`📤 [${this.id}] Sharing clean data with other agents`);
-    
-    if (!this.processedData) {
-      throw new Error('No processed data to share');
-    }
-    
-    // Broadcast clean data to all agents
-    await this.broadcastMessage('clean_data_available', {
-      data: this.processedData,
-      qualityScore: this.qualityScore,
-      provider: this.id,
-      timestamp: Date.now()
-    });
-    
-    this.goals.delete('share_clean_data');
-    
-    return { 
-      success: true, 
-      message: 'Clean data shared with all agents',
-      qualityScore: this.qualityScore
-    };
-  }
-  
-  /**
-   * React to system events
-   */
-  reactToSystemEvent(event) {
-    if (event.eventType === 'data_available') {
-      // Immediately add goal to process new data
-      this.addGoal('validate_data');
-      console.log(`📊 [${this.id}] Reacting to new data availability`);
-    }
+    return normalized;
   }
 }

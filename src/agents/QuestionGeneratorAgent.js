@@ -1,9 +1,9 @@
 /**
- * QuestionGeneratorAgent - Autonomous agent for generating categorized questions
+ * QuestionGeneratorAgent - Dynamic agent for generating categorized questions
  * 
  * This agent:
- * 1. Autonomously generates 15+ questions across 5 categories
- * 2. Makes independent decisions about question types and priorities
+ * 1. Generates 15+ questions across 5 categories when assigned tasks
+ * 2. Interacts with other agents to get clean data
  * 3. Adapts question generation based on product data characteristics
  * 4. Shares question bank with content generation agents
  */
@@ -16,8 +16,7 @@ export class QuestionGeneratorAgent extends BaseAgent {
       ...config,
       type: 'question_generator',
       name: 'QuestionGeneratorAgent',
-      capabilities: ['question_generation', 'categorization', 'content_analysis'],
-      initialGoals: ['wait_for_clean_data', 'generate_question_bank', 'categorize_questions', 'share_questions']
+      capabilities: ['question_generation', 'categorization', 'content_analysis']
     });
     
     // Question-specific state
@@ -71,6 +70,182 @@ export class QuestionGeneratorAgent extends BaseAgent {
   }
   
   /**
+   * Perform goal-specific work (autonomous agent implementation)
+   */
+  async performGoalWork(goal) {
+    console.log(`❓ [${this.id}] Working on goal: ${goal.description}`);
+    
+    try {
+      // Check if we have clean data first - try multiple sources including prefixed ones
+      let cleanData = this.beliefs.get('clean_data') || 
+                     this.beliefs.get('initial_context') ||
+                     this.knowledge.get('processed_data');
+      
+      // Also try prefixed knowledge keys from other agents
+      if (!cleanData) {
+        for (const [key, value] of this.knowledge.entries()) {
+          if (key.includes('clean_data') || key.includes('processed_data') || key.includes('initial_context')) {
+            cleanData = value;
+            break;
+          }
+        }
+      }
+      
+      if (!cleanData && (goal.description.includes('questions') || goal.description.includes('generate') || goal.description.includes('comprehensive'))) {
+        return { success: false, message: 'No clean data available for question generation' };
+      }
+      
+      if (goal.description.includes('questions') || goal.description.includes('generate') || goal.description.includes('comprehensive')) {
+        return await this.generateQuestionBank();
+      }
+      
+      if (goal.description.includes('process_product')) {
+        // Mark product processing goal as completed since we have clean data
+        goal.status = 'completed';
+        goal.completedAt = Date.now();
+        this.goalsAchieved++;
+        this.goals.delete(goal);
+        return { success: true, message: 'Product processing completed' };
+      }
+      
+      if (goal.description.includes('analyze_content_quality')) {
+        // This goal is not for QuestionGeneratorAgent, mark as completed
+        goal.status = 'completed';
+        goal.completedAt = Date.now();
+        this.goalsAchieved++;
+        this.goals.delete(goal);
+        return { success: true, message: 'Content quality analysis not applicable for question generator' };
+      }
+      
+      return { success: false, message: 'Unknown goal type' };
+    } catch (error) {
+      console.error(`❌ [${this.id}] Error in performGoalWork: ${error.message}`);
+      return { success: false, message: `Error: ${error.message}` };
+    }
+  }
+  
+  /**
+   * Generate question bank autonomously
+   */
+  async generateQuestionBank() {
+    // Get clean data from beliefs - try multiple keys including prefixed ones
+    let cleanData = this.beliefs.get('clean_data') || 
+                   this.beliefs.get('initial_context') ||
+                   this.knowledge.get('processed_data');
+    
+    // If cleanData is not a valid object with productName, try other sources
+    if (!cleanData || typeof cleanData !== 'object' || !cleanData.productName) {
+      // Try prefixed knowledge keys from other agents
+      for (const [key, value] of this.knowledge.entries()) {
+        if (key.includes('clean_data') || key.includes('processed_data') || key.includes('initial_context')) {
+          if (value && typeof value === 'object' && value.productName) {
+            cleanData = value;
+            break;
+          }
+        }
+      }
+    }
+    
+    // If still no valid clean data, try to extract from any available knowledge
+    if (!cleanData || typeof cleanData !== 'object' || !cleanData.productName) {
+      for (const [key, value] of this.knowledge.entries()) {
+        if (value && typeof value === 'object' && value.productName) {
+          console.log(`❓ [${this.id}] Found product data in knowledge key: ${key}`);
+          cleanData = value;
+          break;
+        }
+      }
+    }
+    
+    // Also check beliefs for any object with productName
+    if (!cleanData || typeof cleanData !== 'object' || !cleanData.productName) {
+      for (const [key, value] of this.beliefs.entries()) {
+        if (value && typeof value === 'object' && value.productName) {
+          console.log(`❓ [${this.id}] Found product data in beliefs key: ${key}`);
+          cleanData = value;
+          break;
+        }
+      }
+    }
+    
+    // CRITICAL FIX: If initial_context is corrupted to just a string, reconstruct it
+    if (!cleanData || typeof cleanData !== 'object' || !cleanData.productName) {
+      const initialContext = this.beliefs.get('initial_context');
+      
+      // If initial_context is corrupted to just the product name string, we need to get the full data
+      if (typeof initialContext === 'string') {
+        console.log(`🔍 [${this.id}] initial_context corrupted to string, reconstructing data...`);
+        
+        // Try to find the full product data from other sources
+        const productData = this.beliefs.get('product_data') || this.beliefs.get('parse_data');
+        if (productData && typeof productData === 'object' && productData.productName) {
+          cleanData = productData;
+        } else {
+          // As a last resort, create a minimal object with the product name
+          cleanData = { productName: initialContext };
+        }
+      }
+    }
+    
+    if (!cleanData) {
+      console.log(`❌ [${this.id}] No clean data found. Available knowledge keys:`, Array.from(this.knowledge.keys()));
+      console.log(`❌ [${this.id}] Available beliefs keys:`, Array.from(this.beliefs.keys()));
+      return { success: false, message: 'No clean data available for question generation' };
+    }
+    
+    console.log(`✅ [${this.id}] Found clean data with productName: ${cleanData.productName}`);
+    
+    console.log(`❓ [${this.id}] Generating question bank for ${cleanData.productName || 'product'}`);
+    
+    const questions = [];
+    
+    // Generate questions for each category
+    for (const category of this.questionCategories) {
+      const categoryQuestions = this.generateQuestionsForCategory(cleanData, category);
+      questions.push(...categoryQuestions);
+    }
+    
+    // Ensure we have enough questions
+    while (questions.length < this.targetQuestionCount) {
+      const additionalQuestion = this.generateGenericQuestion(cleanData, questions.length);
+      questions.push(additionalQuestion);
+    }
+    
+    this.generatedQuestions = questions;
+    
+    // Store in beliefs and knowledge for other agents
+    this.beliefs.set('questions', this.generatedQuestions);
+    this.knowledge.set('question_bank', this.generatedQuestions);
+    
+    console.log(`✅ [${this.id}] Generated ${questions.length} questions across ${this.questionCategories.length} categories`);
+    
+    // Share questions with other agents immediately
+    await this.broadcastMessage('questions_available', {
+      questions: this.generatedQuestions,
+      provider: this.id,
+      timestamp: Date.now()
+    });
+    
+    // Mark all question-related goals as completed
+    for (const goal of this.goals) {
+      if (goal.description.includes('questions') || goal.description.includes('generate') || goal.description.includes('comprehensive')) {
+        goal.status = 'completed';
+        goal.completedAt = Date.now();
+        this.goalsAchieved++;
+      }
+    }
+    
+    // Remove completed goals
+    this.goals = new Set(Array.from(this.goals).filter(goal => goal.status !== 'completed'));
+    
+    return { 
+      success: true, 
+      message: `Generated ${questions.length} questions`,
+      data: this.generatedQuestions
+    };
+  }
+
+  /**
    * Initialize question generator agent
    */
   async initialize() {
@@ -80,38 +255,81 @@ export class QuestionGeneratorAgent extends BaseAgent {
   }
   
   /**
+   * Perform task-specific work for question generation
+   */
+  async performTaskWork(task) {
+    console.log(`❓ [${this.id}] Starting question generation task: ${task.id}`);
+    
+    // Get clean data from shared data or wait for it
+    let cleanData = this.sharedData.get('clean_data') || this.sharedData.get('parse_data');
+    
+    if (!cleanData) {
+      console.log(`📨 [${this.id}] Requesting clean data from DataParserAgent`);
+      await this.requestDataFromPeers(['clean_data']);
+      cleanData = this.sharedData.get('clean_data') || this.sharedData.get('parse_data');
+    }
+    
+    if (!cleanData) {
+      throw new Error('No clean data available for question generation');
+    }
+    
+    // Generate questions
+    console.log(`❓ [${this.id}] Generating question bank for ${cleanData.productName}`);
+    this.generatedQuestions = this.generateQuestions(cleanData);
+    
+    // Categorize questions
+    console.log(`📋 [${this.id}] Categorizing ${this.generatedQuestions.length} questions`);
+    this.categorizeQuestions();
+    
+    console.log(`✅ [${this.id}] Generated ${this.generatedQuestions.length} questions across ${this.questionCategories.length} categories`);
+    
+    // Store in shared data
+    this.sharedData.set('question_bank', this.generatedQuestions);
+    this.sharedData.set('generate_questions', this.generatedQuestions);
+    
+    // Return result
+    const result = {
+      agentId: this.id,
+      taskId: task.id,
+      type: 'question_bank',
+      questions: this.generatedQuestions,
+      categories: this.questionCategories,
+      totalQuestions: this.generatedQuestions.length,
+      timestamp: Date.now()
+    };
+    
+    return result;
+  }
+  
+  /**
    * Decide what action to take based on situation
    */
-  decideAction(situation) {
-    // Priority 1: Wait for clean data from DataParserAgent
-    if (!situation.beliefs.clean_data && this.goals.has('wait_for_clean_data')) {
+  async decideAction(situation) {
+    // Priority 1: Work on goals if we have clean data
+    const activeGoals = situation.goals.filter(goal => goal.status === 'active');
+    if (activeGoals.length > 0 && this.beliefs.has('clean_data')) {
+      const highestPriorityGoal = activeGoals.sort((a, b) => b.priority - a.priority)[0];
+      
       return {
-        action: 'wait_for_clean_data',
-        reasoning: 'Waiting for clean product data from DataParserAgent'
+        action: 'work_on_goal',
+        goal: highestPriorityGoal,
+        reasoning: `Working on highest priority goal: ${highestPriorityGoal.description}`
       };
     }
     
-    // Priority 2: Generate question bank if we have clean data
-    if (situation.beliefs.clean_data && this.goals.has('generate_question_bank')) {
+    // Priority 2: Request clean data if we don't have it and have active goals
+    if (activeGoals.length > 0 && !this.beliefs.has('clean_data')) {
       return {
-        action: 'generate_question_bank',
-        data: situation.beliefs.clean_data,
-        reasoning: 'Generating comprehensive question bank from clean data'
+        action: 'request_data',
+        dataType: 'clean_data',
+        reasoning: 'Requesting clean product data from DataParserAgent'
       };
     }
     
-    // Priority 3: Categorize questions
-    if (this.generatedQuestions.length > 0 && this.goals.has('categorize_questions')) {
+    // Priority 3: Share questions with other agents if we have them
+    if (this.generatedQuestions.length > 0) {
       return {
-        action: 'categorize_questions',
-        reasoning: 'Organizing questions into categories'
-      };
-    }
-    
-    // Priority 4: Share questions with other agents
-    if (this.questionBank.size > 0 && this.goals.has('share_questions')) {
-      return {
-        action: 'share_questions',
+        action: 'share_knowledge',
         reasoning: 'Sharing question bank with content generation agents'
       };
     }
@@ -125,20 +343,20 @@ export class QuestionGeneratorAgent extends BaseAgent {
   async executeDecision(decision) {
     try {
       switch (decision.action) {
-        case 'wait_for_clean_data':
-          return await this.waitForCleanData();
+        case 'work_on_goal':
+          return await this.workOnGoal(decision.goal);
+          
+        case 'request_data':
+          return await this.requestDataFromPeers([decision.dataType]);
           
         case 'generate_question_bank':
-          return await this.generateQuestionBank(decision.data);
-          
-        case 'categorize_questions':
-          return await this.categorizeQuestions();
+          return await this.generateQuestionBank();
           
         case 'share_questions':
           return await this.shareQuestions();
           
         default:
-          return { success: false, message: `Unknown action: ${decision.action}` };
+          return await super.executeDecision(decision);
       }
     } catch (error) {
       return { success: false, message: error.message };
@@ -157,39 +375,6 @@ export class QuestionGeneratorAgent extends BaseAgent {
     }
     
     return { success: false, message: 'Still waiting for clean data' };
-  }
-  
-  /**
-   * Generate question bank
-   */
-  async generateQuestionBank(data) {
-    console.log(`❓ [${this.id}] Generating question bank for ${data.productName || 'product'}`);
-    
-    const questions = [];
-    
-    // Generate questions for each category
-    for (const category of this.questionCategories) {
-      const categoryQuestions = this.generateQuestionsForCategory(data, category);
-      questions.push(...categoryQuestions);
-    }
-    
-    // Ensure we have enough questions
-    while (questions.length < this.targetQuestionCount) {
-      const additionalQuestion = this.generateGenericQuestion(data, questions.length);
-      questions.push(additionalQuestion);
-    }
-    
-    this.generatedQuestions = questions;
-    
-    console.log(`✅ [${this.id}] Generated ${questions.length} questions across ${this.questionCategories.length} categories`);
-    
-    this.goals.delete('generate_question_bank');
-    
-    return { 
-      success: true, 
-      message: `Generated ${questions.length} questions`,
-      questionCount: questions.length
-    };
   }
   
   /**
@@ -364,6 +549,10 @@ export class QuestionGeneratorAgent extends BaseAgent {
     if (message.type === 'clean_data_available') {
       this.beliefs.set('clean_data', message.content.data);
       console.log(`📊 [${this.id}] Received clean data from ${message.from || 'unknown'}`);
+    }
+    if (message.type === 'questions_available') {
+      this.beliefs.set('questions', message.content.questions);
+      console.log(`❓ [${this.id}] Received questions from ${message.from || 'unknown'}`);
     }
   }
   

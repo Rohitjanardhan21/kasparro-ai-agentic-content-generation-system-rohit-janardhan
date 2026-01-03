@@ -12,73 +12,73 @@
       "vitamin c brightening serum": {
         "type": "primary",
         "relevance": 100,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "low"
       },
       "vitamin": {
         "type": "primary",
         "relevance": 95,
-        "frequency": "7.69",
+        "frequency": "7.84",
         "competition": "high"
       },
       "brightening": {
         "type": "primary",
         "relevance": 90,
-        "frequency": "3.85",
+        "frequency": "3.92",
         "competition": "high"
       },
       "serum": {
         "type": "primary",
         "relevance": 85,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "high"
       },
       "20% vitamin c": {
         "type": "primary",
         "relevance": 80,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "low"
       },
       "vitamin c": {
         "type": "primary",
         "relevance": 75,
-        "frequency": "5.77",
+        "frequency": "5.88",
         "competition": "high"
       },
       "hyaluronic acid": {
         "type": "primary",
         "relevance": 70,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "high"
       },
       "niacinamide": {
         "type": "primary",
         "relevance": 65,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "high"
       },
       "vitamin e": {
         "type": "primary",
         "relevance": 60,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "high"
       },
       "anti-aging": {
         "type": "primary",
         "relevance": 55,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "high"
       },
       "hydration": {
         "type": "primary",
         "relevance": 50,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "high"
       },
       "dark spot reduction": {
         "type": "primary",
         "relevance": 45,
-        "frequency": "1.92",
+        "frequency": "1.96",
         "competition": "low"
       }
     }
@@ -229,5 +229,5 @@
     }
   },
   "generated_by": "seo_optimization_001",
-  "timestamp": "2026-01-02T15:34:58.650Z"
+  "timestamp": "2026-01-03T05:34:35.943Z"
 }
